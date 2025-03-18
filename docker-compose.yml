@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: weid-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:5000/api/v1
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    networks:
+      - weid-network
+    restart: unless-stopped
+    command: npm run dev
+
+networks:
+  weid-network:
+    driver: bridge
