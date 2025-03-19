@@ -15,6 +15,10 @@ import UserProfile from './pages/profile/UserProfile'
 import SchedulePage from './pages/schedule/SchedulePage'
 import ActivitiesPage from './pages/activities/ActivitiesPage'
 import NotFound from './pages/NotFound'
+import DrivePage from './pages/drive/DrivePage';
+import DriveFilePage from './pages/drive/DriveFilePage';
+import DriveCallbackPage from './pages/drive/DriveCallbackPage';
+
 
 const routes = (isAuthenticated) => [
   {
@@ -34,8 +38,19 @@ const routes = (isAuthenticated) => [
       { path: 'schedule', element: <SchedulePage /> },
       { path: 'activities', element: <ActivitiesPage /> },
       { path: 'profile', element: <UserProfile /> },
+      { path: '/drive', element: <DrivePage /> },
+      { path: '/drive/file/:fileId', element: <DriveFilePage /> },
+
       { path: '*', element: <NotFound /> }
     ]
+  },
+  {
+    path: '/drive',
+    element: isAuthenticated ? <DrivePage /> : <Navigate to="/login" />,
+  },
+  {
+    path: '/drive/callback',
+    element: <DriveCallbackPage />,
   },
   {
     path: '/',
@@ -57,6 +72,7 @@ const routes = (isAuthenticated) => [
     path: '/reset-password',
     element: !isAuthenticated ? <ResetPassword /> : <Navigate to="/tasks" />
   },
+
   {
     path: '*',
     element: <NotFound />

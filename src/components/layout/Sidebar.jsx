@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   FiHome, FiCheckSquare, FiActivity, FiCalendar, FiFileText,
-  FiUser, FiSettings, FiLogOut, FiMenu, FiX
+  FiUser, FiSettings, FiLogOut, FiMenu, FiX, FiHardDrive, FiCloud
 } from 'react-icons/fi';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme'
@@ -10,7 +10,7 @@ import { useTheme } from '../../hooks/useTheme'
 const Sidebar = ({ open, toggleSidebar }) => {
   const { currentUser, logout } = useAuth();
   const location = useLocation();
-  const { theme, toggleTheme } = useTheme()
+  const { theme } = useTheme();
 
   const menuItems = [
     {
@@ -40,8 +40,18 @@ const Sidebar = ({ open, toggleSidebar }) => {
           name: 'Schedule',
           icon: <FiCalendar className="h-5 w-5" />,
           path: '/schedule'
-        }
+        },
       ]
+    },
+    {
+      title: 'Integrations',
+      items: [
+        {
+          icon: <FiCloud />,
+          name: 'Google Drive',
+          path: '/drive',
+        },
+      ],
     },
     {
       title: 'Account',
