@@ -277,3 +277,57 @@ html body {
 .dark-theme .shadow-lg {
   box-shadow: var(--shadow-lg) !important;
 }
+/* Adicionando estas substituições ao final do arquivo themes.css */
+
+/* Text colors for dark theme - complementos para garantir que todos os textos respondam ao tema */
+.dark-theme .text-gray-500 {
+  color: #a1a1aa !important; /* Cinza mais claro para melhor contraste no modo escuro */
+}
+
+.dark-theme .text-gray-400 {
+  color: #d4d4d8 !important; /* Cinza mais claro para melhor contraste no modo escuro */
+}
+
+.dark-theme .text-black {
+  color: #e5e5e5 !important; /* Branco quase puro para texto preto no modo escuro */
+}
+
+/* Form label text colors */
+.dark-theme label.text-gray-700,
+.dark-theme .text-gray-700 {
+  color: #d4d4d8 !important; /* Cinza claro para labels de formulário no modo escuro */
+}
+
+/* Link texts */
+.dark-theme a.text-blue-600,
+.dark-theme .text-blue-600 {
+  color: #93c5fd !important; /* Azul mais claro para melhor visibilidade no modo escuro */
+}
+
+.dark-theme a.text-violet-600,
+.dark-theme .text-violet-600 {
+  color: #c4b5fd !important; /* Violeta mais claro para melhor visibilidade no modo escuro */
+}
+
+.dark-theme a.text-gray-500:hover,
+.dark-theme .text-gray-500:hover {
+  color: #f8fafc !important; /* Cor mais clara para hover de links no modo escuro */
+}
+
+/* Password strength indicators */
+.dark-theme .text-gray-300 {
+  color: #6b7280 !important; /* Cinza médio para indicadores inativos no modo escuro */
+}
+
+/* Card backgrounds and form elements */
+.dark-theme .bg-white {
+  background-color: #1e293b !important; /* Fundo escuro para cards */
+}
+
+/* Form field backgrounds */
+.dark-theme input.bg-gray-50,
+.dark-theme select.bg-gray-50,
+.dark-theme textarea.bg-gray-50 {
+  background-color: #0f172a !important;
+  color: #e2e8f0 !important;
+}

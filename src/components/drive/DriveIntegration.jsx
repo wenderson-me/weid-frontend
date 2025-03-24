@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { FiFolder, FiFile, FiImage, FiVideo, FiMusic, FiFileText, FiCode, FiArchive, FiRefreshCw, FiLogOut, FiArrowLeft } from 'react-icons/fi';
 import DriveFolderBreadcrumb from './DriveFolderBreadcrumb';
 import DriveSearch from './DriveSearch';
-import DriveAuth from './DriveAuth';
 import driveService from '../../services/driveService';
 
 const DriveIntegration = () => {

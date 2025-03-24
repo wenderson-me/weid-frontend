@@ -1,111 +1,133 @@
-import { createContext, useState, useEffect, useCallback } from 'react'
-import { useAuth } from '../hooks/useAuth'
+// src/context/ThemeContext.jsx
+import React, { createContext, useState, useEffect, useCallback } from 'react';
+import { useAuth } from '../hooks/useAuth';
 
-const ThemeContext = createContext(null)
+// Criando o contexto com valores padrão
+const ThemeContext = createContext({
+  theme: 'system',
+  toggleTheme: () => {},
+  getEffectiveTheme: () => 'light',
+});
 
 export const ThemeProvider = ({ children }) => {
-  const { currentUser } = useAuth()
+  const { currentUser } = useAuth();
   const [theme, setTheme] = useState(() => {
-    // First check if there's a theme saved in localStorage
-    const savedTheme = localStorage.getItem('theme')
-    if (savedTheme) return savedTheme
+    // Primeiro verificamos se há um tema salvo no localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) return savedTheme;
 
-    // Then check if the user has saved preferences
+    // Depois verificamos se o usuário tem preferências salvas
     if (currentUser?.preferences?.theme) {
-      return currentUser.preferences.theme
+      return currentUser.preferences.theme;
     }
 
-    // Default is 'system'
-    return 'system'
-  })
+    // Padrão é 'system'
+    return 'system';
+  });
 
-  // Create theme transition overlay
+  // Criar overlay para transição de tema (evita flash visual)
   const createThemeOverlay = useCallback(() => {
-    const overlay = document.createElement('div')
-    overlay.className = 'theme-transition-overlay'
-    document.body.appendChild(overlay)
-    return overlay
-  }, [])
+    const overlay = document.createElement('div');
+    overlay.classList.add('fixed', 'inset-0', 'bg-white', 'dark:bg-gray-900', 'opacity-0', 'transition-opacity', 'duration-300', 'pointer-events-none', 'z-50');
+    document.body.appendChild(overlay);
+    return overlay;
+  }, []);
 
-  // Effect to apply the class to the html element when the theme changes
+  // Aplicar a classe correspondente ao tema no elemento <html> quando o tema muda
   useEffect(() => {
-    const root = window.document.documentElement
-    const overlay = createThemeOverlay()
+    const root = document.documentElement;
+    const overlay = createThemeOverlay();
 
-    // Clear old classes
-    root.classList.remove('light-theme', 'dark-theme')
+    // Limpar classes antigas
+    root.classList.remove('light-theme', 'dark-theme');
 
-    // Show overlay
-    overlay.classList.add('active')
+    // Mostrar overlay para transição suave
+    overlay.classList.add('active');
+    overlay.style.opacity = '0.3';
 
-    // Apply theme after a short delay to allow transition
+    // Aplicar tema após um pequeno intervalo para permitir a transição
     setTimeout(() => {
       if (theme === 'system') {
-        // Check system preference
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        root.classList.add(systemPrefersDark ? 'dark-theme' : 'light-theme')
+        // Verificar preferência do sistema
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.classList.add(systemPrefersDark ? 'dark-theme' : 'light-theme');
+
+        // Atualizar atributo data-theme para o tailwind
+        root.setAttribute('data-theme', systemPrefersDark ? 'dark' : 'light');
       } else {
-        // Apply specific theme
-        root.classList.add(`${theme}-theme`)
+        // Aplicar tema específico
+        root.classList.add(`${theme}-theme`);
+
+        // Atualizar atributo data-theme para o tailwind
+        root.setAttribute('data-theme', theme);
       }
 
-      // Hide overlay
-      overlay.classList.remove('active')
-    }, 50)
+      // Esconder overlay
+      overlay.style.opacity = '0';
 
-    // Cleanup overlay after transition
-    setTimeout(() => {
-      overlay.remove()
-    }, 300)
+      // Limpar overlay após a transição
+      setTimeout(() => {
+        overlay.remove();
+      }, 300);
 
-    // Save to localStorage
-    localStorage.setItem('theme', theme)
-  }, [theme, createThemeOverlay])
+      // Salvar no localStorage
+      localStorage.setItem('theme', theme);
+    }, 50);
+  }, [theme, createThemeOverlay]);
 
-  // Effect to update the theme when system preference changes
+  // Atualizar o tema quando a preferência do sistema muda
   useEffect(() => {
-    if (theme === 'system') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    if (theme !== 'system') return;
 
-      const handleChange = () => {
-        const root = window.document.documentElement
-        root.classList.remove('light-theme', 'dark-theme')
-        root.classList.add(mediaQuery.matches ? 'dark-theme' : 'light-theme')
-      }
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-      // Call handler immediately to set initial state
-      handleChange()
+    const handleChange = () => {
+      const root = document.documentElement;
+      root.classList.remove('light-theme', 'dark-theme');
+      root.classList.add(mediaQuery.matches ? 'dark-theme' : 'light-theme');
 
-      mediaQuery.addEventListener('change', handleChange)
-      return () => mediaQuery.removeEventListener('change', handleChange)
-    }
-  }, [theme])
+      // Atualizar atributo data-theme para o tailwind
+      root.setAttribute('data-theme', mediaQuery.matches ? 'dark' : 'light');
+    };
 
-  // Effect to update the theme when user preferences are loaded/changed
+    // Chamar handler imediatamente para definir o estado inicial
+    handleChange();
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [theme]);
+
+  // Atualizar o tema quando as preferências do usuário são carregadas/alteradas
   useEffect(() => {
     if (currentUser?.preferences?.theme && !localStorage.getItem('theme')) {
-      setTheme(currentUser.preferences.theme)
+      setTheme(currentUser.preferences.theme);
     }
-  }, [currentUser])
+  }, [currentUser]);
 
-  // Function to toggle between themes
+  // Função para alternar entre temas
   const toggleTheme = useCallback((newTheme) => {
-    setTheme(newTheme)
-  }, [])
+    setTheme(newTheme);
+  }, []);
 
-  // Function to get current effective theme (light/dark)
+  // Função para obter o tema efetivo atual (light/dark)
   const getEffectiveTheme = useCallback(() => {
     if (theme === 'system') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
-    return theme
-  }, [theme])
+    return theme;
+  }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, getEffectiveTheme }}>
+    <ThemeContext.Provider
+      value={{
+        theme,
+        toggleTheme,
+        getEffectiveTheme
+      }}
+    >
       {children}
     </ThemeContext.Provider>
-  )
-}
+  );
+};
 
-export default ThemeContext
+export default ThemeContext;
