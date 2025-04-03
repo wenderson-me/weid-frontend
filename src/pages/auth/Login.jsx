@@ -10,7 +10,6 @@ import { Input } from '../../components/ui/Input';
 import { Label } from '../../components/ui/Label';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '../../components/ui/Card';
 import { Checkbox } from '../../components/ui/Checkbox';
-import AuthThemeToggle from '../../components/auth/AuthThemeToggle';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../components/ui/ToastContext';
 
@@ -47,10 +46,6 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-gray-50 dark:bg-gray-900">
-      {/* Theme Toggle in the top right */}
-      <div className="absolute top-4 right-4">
-        <AuthThemeToggle />
-      </div>
 
       {/* Logo */}
       <div className="mb-8 text-center">
