@@ -7,10 +7,16 @@ import { useAuth } from '../../hooks/useAuth'
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
-    .email('Invalid email address')
-    .required('Email is required'),
+    .required('Please enter your email address')
+    .email('Please enter a valid email address')
+    .max(255, 'Email must not exceed 255 characters'),
   password: Yup.string()
-    .required('Password is required'),
+    .required('Please enter your password')
+    .min(8, 'Password must be at least 8 characters')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+      'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+    )
 })
 
 const Login = () => {
@@ -50,7 +56,7 @@ const Login = () => {
           </div>
 
           {apiError && (
-            <div className="mb-6 p-4 rounded-lg bg-red-50 border border-red-100 text-sm text-red-600">
+            <div className="mb-6 p-4 rounded-lg bg-red-50 border border-red-100 text-sm text-red-600" data-testid="login-error">
               {apiError}
             </div>
           )}
@@ -82,7 +88,14 @@ const Login = () => {
                       placeholder="Enter your email"
                     />
                   </div>
-                  <ErrorMessage name="email" component="div" className="mt-1.5 text-sm text-red-600" />
+                  <ErrorMessage name="email" component="div" className="mt-1.5 text-sm text-red-600 flex items-center gap-1" render={msg => (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <span>{msg}</span>
+                    </>
+                  )} />
                 </div>
 
                 <div>
@@ -114,7 +127,14 @@ const Login = () => {
                       {showPassword ? <FiEyeOff className="h-5 w-5" /> : <FiEye className="h-5 w-5" />}
                     </button>
                   </div>
-                  <ErrorMessage name="password" component="div" className="mt-1.5 text-sm text-red-600" />
+                  <ErrorMessage name="password" component="div" className="mt-1.5 text-sm text-red-600 flex items-center gap-1" render={msg => (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <span>{msg}</span>
+                    </>
+                  )} />
                 </div>
 
                 <div className="flex items-center">
