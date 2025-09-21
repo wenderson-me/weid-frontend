@@ -29,9 +29,10 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true
-
+    if (error.response?.status === 401 &&
+        !originalRequest._retry &&
+        !originalRequest.url.includes('/auth/login')) {
+        originalRequest._retry = true
       try {
         const refreshToken = localStorage.getItem('refreshToken')
         const response = await axios.post(`${API_URL}/auth/refresh-token`, {
