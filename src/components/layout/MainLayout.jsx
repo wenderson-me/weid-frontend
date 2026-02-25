@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Header from './Header'
-import { TaskProvider } from '../../context/TaskContext'
 
 const MainLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -42,10 +41,9 @@ const MainLayout = () => {
   }
 
   return (
-    <TaskProvider>
-      <div className="flex h-screen bg-gray-50">
-        {/* Sidebar */}
-        <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
+    <div className="flex h-screen bg-gray-50">
+      {/* Sidebar */}
+      <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
 
 
         <div className="flex flex-col flex-1 overflow-hidden">
@@ -64,7 +62,6 @@ const MainLayout = () => {
           </main>
         </div>
       </div>
-    </TaskProvider>
   )
 }
 
