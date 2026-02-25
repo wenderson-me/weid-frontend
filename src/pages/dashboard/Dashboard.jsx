@@ -139,6 +139,7 @@ const Dashboard = () => {
               icon={card.icon}
               color={card.color}
               loading={card.loading}
+              index={index}
             />
           ))}
         </div>

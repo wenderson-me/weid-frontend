@@ -28,9 +28,9 @@ export const TaskCardSkeletonLoader = ({ count = 4 }) => {
   return (
     <div className="space-y-3">
       {Array.from({ length: count }).map((_, idx) => (
-        <LoadingSkeleton 
+        <LoadingSkeleton
           key={idx}
-          variant="taskCard" 
+          variant="taskCard"
           style={{ animationDelay: `${idx * 100}ms` }}
         />
       ))}
@@ -52,7 +52,7 @@ export const TaskBoardLoader = () => {
           {/* Cards */}
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, cardIdx) => (
-              <LoadingSkeleton 
+              <LoadingSkeleton
                 key={cardIdx}
                 variant="taskCard"
                 style={{ animationDelay: `${(colIdx * 100) + (cardIdx * 50)}ms` }}
@@ -98,7 +98,7 @@ export const ActivityFeedLoader = ({ count = 5 }) => {
         <div key={idx} className="flex gap-4 entrance-fade" style={{ animationDelay: `${idx * 80}ms` }}>
           {/* Avatar */}
           <LoadingSkeleton variant="avatar" height="40px" />
-          
+
           {/* Content */}
           <div className="flex-1 space-y-2">
             <LoadingSkeleton variant="line" width="60%" />
@@ -117,7 +117,7 @@ export const NotesGridLoader = ({ count = 6 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {Array.from({ length: count }).map((_, idx) => (
-        <div 
+        <div
           key={idx}
           className="rounded-xl bg-white shadow-sm p-4 space-y-3 entrance-fade"
           style={{ animationDelay: `${idx * 80}ms` }}

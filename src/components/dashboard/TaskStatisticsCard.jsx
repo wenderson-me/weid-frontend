@@ -1,22 +1,37 @@
 import React from 'react';
+import { useHoverAnimation } from '../../hooks/useAnimations';
+import LoadingSkeleton from '../common/LoadingSkeleton';
 
-const TaskStatisticsCard = ({ title, value, icon, color, loading }) => {
+const TaskStatisticsCard = ({ title, value, icon, color, loading, index = 0 }) => {
+  const { onMouseEnter, onMouseLeave, style } = useHoverAnimation({
+    duration: 300,
+    scale: 1.02,
+    y: -4,
+    enableGlow: true
+  });
+
   if (loading) {
     return (
-      <div className="bg-white p-4 rounded-lg shadow animate-pulse">
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <div className="h-5 bg-gray-200 rounded w-24 mb-2"></div>
-            <div className="h-8 bg-gray-200 rounded w-12"></div>
-          </div>
-          <div className="h-10 w-10 rounded-lg bg-gray-200"></div>
-        </div>
-      </div>
+      <LoadingSkeleton
+        variant="card"
+        width="100%"
+        height="100px"
+        className="entrance-fade"
+        style={{ animationDelay: `${index * 50}ms` }}
+      />
     );
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+    <div
+      className="bg-white p-4 rounded-lg shadow card-advanced-hover entrance-fade"
+      style={{
+        ...style,
+        animationDelay: `${index * 50}ms`
+      }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium text-gray-500">{title}</h3>

@@ -14,5 +14,11 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    host: true,
+    allowedHosts: [
+      'app.labws.cloud',
+      'localhost',
+      '127.0.0.1'
+    ]
   },
 })

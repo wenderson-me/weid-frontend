@@ -1,8 +1,8 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import TaskCard from './TaskCard'
+import TaskCardModern from './TaskCardModern'
 
-const SortableTaskCard = ({ task }) => {
+const SortableTaskCard = ({ task, index = 0 }) => {
   const {
     attributes,
     listeners,
@@ -26,7 +26,7 @@ const SortableTaskCard = ({ task }) => {
       {...attributes}
       {...listeners}
     >
-      <TaskCard task={task} isDragging={isDragging} />
+      <TaskCardModern task={task} isDragging={isDragging} index={index} />
     </div>
   )
 }

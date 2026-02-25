@@ -22,6 +22,7 @@ import {
 import NoteCard from '../../components/notes/NoteCard'
 import NotesFilter from '../../components/notes/NotesFilter'
 import NoteModal from '../../components/notes/NoteModal'
+import { NotesGridLoader } from '../../components/common/DashboardLoaders'
 
 const NotesPage = () => {
   const location = useLocation()
@@ -279,10 +280,7 @@ const NotesPage = () => {
       )}
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-12">
-          <div className="w-12 h-12 border-4 border-violet-500 rounded-full border-t-transparent animate-spin mb-4"></div>
-          <p className="text-gray-500">Carregando notas...</p>
-        </div>
+        <NotesGridLoader count={9} />
       ) : notes.length > 0 ? (
         <div className="space-y-6">
           {sortedPinnedNotes.length > 0 && (
@@ -306,8 +304,12 @@ const NotesPage = () => {
                   ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
                   : "divide-y divide-gray-100"
                 }>
-                  {sortedPinnedNotes.map((note) => (
-                    <div key={note._id} className={viewMode === 'list' ? "py-2" : ""}>
+                  {sortedPinnedNotes.map((note, index) => (
+                    <div
+                      key={note._id}
+                      className={`${viewMode === 'list' ? "py-2" : ""} entrance-fade`}
+                      style={{ animationDelay: `${index * 50}ms` }}
+                    >
                       <NoteCard
                         note={note}
                         onEdit={handleNoteSelect}
@@ -340,8 +342,12 @@ const NotesPage = () => {
                   ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
                   : "divide-y divide-gray-100"
                 }>
-                  {sortedOtherNotes.map((note) => (
-                    <div key={note._id} className={viewMode === 'list' ? "py-2" : ""}>
+                  {sortedOtherNotes.map((note, index) => (
+                    <div
+                      key={note._id}
+                      className={`${viewMode === 'list' ? "py-2" : ""} entrance-fade`}
+                      style={{ animationDelay: `${index * 50}ms` }}
+                    >
                       <NoteCard
                         note={note}
                         onEdit={handleNoteSelect}

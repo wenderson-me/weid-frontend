@@ -3,6 +3,7 @@ import { useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { FiPlus } from 'react-icons/fi'
 import SortableTaskCard from './SortableTaskCard'
+import LoadingSkeleton from '../common/LoadingSkeleton'
 
 const TaskColumn = ({ id, title, tasks, status, color, loading }) => {
   const { setNodeRef } = useDroppable({
@@ -42,25 +43,24 @@ const TaskColumn = ({ id, title, tasks, status, color, loading }) => {
         className="flex-1 p-3 space-y-3 overflow-auto min-h-[200px]"
       >
         {loading ? (
-
+          // Modern loading skeletons
           Array(3).fill(0).map((_, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-sm p-3 animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-              <div className="h-3 bg-gray-100 rounded w-1/2 mb-4"></div>
-              <div className="flex justify-between">
-                <div className="h-6 w-16 bg-gray-100 rounded-full"></div>
-                <div className="h-6 w-6 bg-gray-100 rounded-full"></div>
-              </div>
-            </div>
+            <LoadingSkeleton
+              key={index}
+              variant="taskCard"
+              width="100%"
+              className="entrance-fade"
+              style={{ animationDelay: `${index * 100}ms` }}
+            />
           ))
         ) : tasks.length > 0 ? (
           <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
-            {tasks.map((task) => (
-              <SortableTaskCard key={task._id} task={task} />
+            {tasks.map((task, index) => (
+              <SortableTaskCard key={task._id} task={task} index={index} />
             ))}
           </SortableContext>
         ) : (
-          <div className="bg-white rounded-xl border border-dashed border-gray-300 p-3 flex flex-col items-center justify-center text-gray-500 text-sm h-24">
+          <div className="bg-white rounded-xl border border-dashed border-gray-300 p-3 flex flex-col items-center justify-center text-gray-500 text-sm h-24 entrance-fade">
             <p>No tasks yet</p>
             <Link
               to={`/tasks/new?status=${status}`}

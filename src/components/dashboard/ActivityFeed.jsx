@@ -4,6 +4,8 @@ import {
   FiPlusCircle, FiEdit, FiCheckCircle, FiClock, FiRefreshCw,
   FiArchive, FiUserPlus, FiUserMinus, FiTag, FiFileText, FiArrowRight
 } from 'react-icons/fi';
+import { useEntranceAnimation } from '../../hooks/useAnimations';
+import LoadingSkeleton from '../common/LoadingSkeleton';
 
 const ActivityFeed = ({ activities, loading }) => {
   const getActivityIcon = (type) => {
@@ -56,12 +58,12 @@ const ActivityFeed = ({ activities, loading }) => {
 
   const renderSkeletons = () => {
     return Array(5).fill(0).map((_, index) => (
-      <div key={`activity-skeleton-${index}`} className="p-4 border-b border-gray-200 animate-pulse">
+      <div key={`activity-skeleton-${index}`} className="p-4 border-b border-gray-200">
         <div className="flex">
-          <div className="h-8 w-8 rounded-full bg-gray-200 flex-shrink-0"></div>
-          <div className="ml-3 flex-1">
-            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+          <LoadingSkeleton variant="avatar" height="32px" className="flex-shrink-0 mr-3" />
+          <div className="flex-1 space-y-2">
+            <LoadingSkeleton variant="text" width="75%" />
+            <LoadingSkeleton variant="line" width="25%" />
           </div>
         </div>
       </div>
@@ -81,34 +83,41 @@ const ActivityFeed = ({ activities, loading }) => {
       {loading ? (
         renderSkeletons()
       ) : (
-        activities.map((activity, index) => (
-          <div key={index} className="p-4 border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors">
-            <div className="flex">
-              <div className="mr-3 flex-shrink-0">
-                {getActivityIcon(activity.type)}
-              </div>
-              <div className="flex-1">
-                <p className="text-sm text-gray-800">{activity.description}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {formatRelativeTime(activity.createdAt)}
-                </p>
+        activities.map((activity, index) => {
+          const { className, style } = useEntranceAnimation(index, 50);
+          return (
+            <div
+              key={index}
+              className={`p-4 border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors ${className}`}
+              style={style}
+            >
+              <div className="flex">
+                <div className="mr-3 flex-shrink-0">
+                  {getActivityIcon(activity.type)}
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-800">{activity.description}</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formatRelativeTime(activity.createdAt)}
+                  </p>
 
-                {/* Activity detail links */}
-                {activity.task && (
-                  <Link to={`/tasks/${activity.task}`} className="mt-1 text-xs text-violet-600 hover:text-violet-800 flex items-center">
-                    View task <FiArrowRight className="ml-1 h-3 w-3" />
-                  </Link>
-                )}
+                  {/* Activity detail links */}
+                  {activity.task && (
+                    <Link to={`/tasks/${activity.task}`} className="mt-1 text-xs text-violet-600 hover:text-violet-800 flex items-center">
+                      View task <FiArrowRight className="ml-1 h-3 w-3" />
+                    </Link>
+                  )}
 
-                {activity.note && (
-                  <Link to={`/notes/${activity.note}`} className="mt-1 text-xs text-violet-600 hover:text-violet-800 flex items-center">
-                    View note <FiArrowRight className="ml-1 h-3 w-3" />
-                  </Link>
-                )}
+                  {activity.note && (
+                    <Link to={`/notes/${activity.note}`} className="mt-1 text-xs text-violet-600 hover:text-violet-800 flex items-center">
+                      View note <FiArrowRight className="ml-1 h-3 w-3" />
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))
+          );
+        })
       )}
     </div>
   );

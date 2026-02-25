@@ -1,4 +1,6 @@
 import { FiCheckSquare, FiClock, FiAlertCircle, FiFile, FiStar, FiMessageSquare, FiCalendar, FiClock as FiClockIcon } from 'react-icons/fi'
+import LoadingSkeleton from '../common/LoadingSkeleton'
+import { useHoverAnimation } from '../../hooks/useAnimations'
 
 const ProfileStatistics = ({ stats, loading }) => {
 
@@ -29,27 +31,81 @@ const ProfileStatistics = ({ stats, loading }) => {
   }
 
 
-  const StatCard = ({ title, value, icon, color }) => (
-    <div className={`bg-white p-6 rounded-xl border border-gray-200 shadow-sm ${color ? `bg-${color}-50` : ''}`}>
-      <div className="flex justify-between items-start">
-        <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <h3 className="text-2xl font-bold text-gray-900 mt-1">{value}</h3>
-        </div>
-        <div className="rounded-full p-2 bg-white shadow-sm border border-gray-100">
-          {icon}
+  const StatCard = ({ title, value, icon, color, index = 0 }) => {
+    const { onMouseEnter, onMouseLeave, style } = useHoverAnimation({
+      duration: 300,
+      scale: 1.02,
+      y: -4,
+      enableGlow: true
+    });
+
+    return (
+      <div
+        className={`bg-white p-6 rounded-xl border border-gray-200 shadow-sm card-advanced-hover entrance-fade ${color ? `bg-${color}-50` : ''}`}
+        style={{ ...style, animationDelay: `${index * 50}ms` }}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
+        <div className="flex justify-between items-start">
+          <div>
+            <p className="text-sm font-medium text-gray-600">{title}</p>
+            <h3 className="text-2xl font-bold text-gray-900 mt-1">{value}</h3>
+          </div>
+          <div className="rounded-full p-2 bg-white shadow-sm border border-gray-100">
+            {icon}
+          </div>
         </div>
       </div>
-    </div>
-  )
+    );
+  };
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <div className="w-12 h-12 border-4 border-violet-500 rounded-full border-t-transparent animate-spin mb-4"></div>
-        <p className="text-gray-500">Loading statistics...</p>
+      <div className="space-y-8">
+        <div>
+          <LoadingSkeleton variant="text" width="40%" height="28px" className="mb-4" />
+          <LoadingSkeleton variant="text" width="60%" height="20px" />
+        </div>
+
+        {/* Account Overview Skeleton */}
+        <div>
+          <LoadingSkeleton variant="text" width="30%" height="24px" className="mb-4" />
+          <LoadingSkeleton variant="card" width="100%" height="140px" />
+        </div>
+
+        {/* Task Activity Skeletons */}
+        <div>
+          <LoadingSkeleton variant="text" width="30%" height="24px" className="mb-4" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {Array(4).fill(0).map((_, idx) => (
+              <LoadingSkeleton
+                key={`task-stat-${idx}`}
+                variant="card"
+                width="100%"
+                height="120px"
+                style={{ animationDelay: `${idx * 100}ms` }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Content & Participation Skeletons */}
+        <div>
+          <LoadingSkeleton variant="text" width="30%" height="24px" className="mb-4" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {Array(3).fill(0).map((_, idx) => (
+              <LoadingSkeleton
+                key={`content-stat-${idx}`}
+                variant="card"
+                width="100%"
+                height="120px"
+                style={{ animationDelay: `${idx * 100}ms` }}
+              />
+            ))}
+          </div>
+        </div>
       </div>
-    )
+    );
   }
 
 
@@ -109,24 +165,28 @@ const ProfileStatistics = ({ stats, loading }) => {
             title="Total Tasks"
             value={stats.tasks.total}
             icon={<FiCheckSquare className="h-5 w-5 text-gray-600" />}
+            index={0}
           />
           <StatCard
             title="Completed Tasks"
             value={stats.tasks.completed}
             icon={<FiCheckSquare className="h-5 w-5 text-green-600" />}
             color="green"
+            index={1}
           />
           <StatCard
             title="In Progress"
             value={stats.tasks.inProgress}
             icon={<FiClock className="h-5 w-5 text-blue-600" />}
             color="blue"
+            index={2}
           />
           <StatCard
             title="Overdue Tasks"
             value={stats.tasks.overdue}
             icon={<FiAlertCircle className="h-5 w-5 text-red-600" />}
             color="red"
+            index={3}
           />
         </div>
       </div>

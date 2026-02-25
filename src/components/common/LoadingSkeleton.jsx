@@ -3,15 +3,15 @@
  * Provides elegant loading placeholder skeletons with shimmer effect
  */
 
-const LoadingSkeleton = ({ 
-  variant = 'card', 
-  count = 1, 
-  width = '100%', 
+const LoadingSkeleton = ({
+  variant = 'card',
+  count = 1,
+  width = '100%',
   height = '100px',
   className = ''
 }) => {
   const baseClasses = 'rounded-lg bg-gray-200 skeleton'
-  
+
   const variants = {
     card: {
       className: 'rounded-xl shadow-sm',
@@ -52,21 +52,21 @@ const LoadingSkeleton = ({
           <div className="skeleton rounded-full h-5 w-12"></div>
           <div className="skeleton rounded-full h-5 w-16"></div>
         </div>
-        
+
         {/* Title skeleton */}
         <div className="space-y-2">
           <div className="skeleton h-5 w-full rounded-md"></div>
           <div className="skeleton h-5 w-4/5 rounded-md"></div>
         </div>
-        
+
         {/* Description skeleton */}
         <div className="skeleton h-4 w-full rounded-md"></div>
-        
+
         {/* Progress bar skeleton */}
         <div className="space-y-1">
           <div className="skeleton h-2 w-full rounded-full"></div>
         </div>
-        
+
         {/* Footer skeleton */}
         <div className="flex justify-between items-center pt-2 border-t border-gray-200">
           <div className="flex gap-2">
@@ -87,7 +87,7 @@ const LoadingSkeleton = ({
     return (
       <div className="space-y-3">
         {Array.from({ length: count }).map((_, idx) => (
-          <div 
+          <div
             key={idx}
             className={`${baseClasses} ${variant_config.className} entrance-fade`}
             style={{
@@ -102,7 +102,7 @@ const LoadingSkeleton = ({
 
   // Single item skeleton
   return (
-    <div 
+    <div
       className={`${baseClasses} ${variant_config.className} entrance-fade ${className}`}
       style={variant_config.style}
     ></div>

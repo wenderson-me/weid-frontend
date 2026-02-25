@@ -86,7 +86,7 @@ const TaskCardModern = ({ task, isDragging, index = 0 }) => {
   }
 
   return (
-    <div 
+    <div
       className={`
         ${getCardColorClass()}
         ${isDragging ? 'dragging' : ''}
