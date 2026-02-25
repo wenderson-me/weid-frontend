@@ -5,9 +5,32 @@ import {
   FiMessageSquare,
   FiAlertTriangle,
   FiPaperclip,
+  FiCheckCircle,
 } from 'react-icons/fi'
 
 const TaskCard = ({ task, isDragging }) => {
+  // Get card color based on priority and status
+  const getCardColorClass = () => {
+    const colors = {
+      urgent: 'kanban-card pink',
+      high: 'kanban-card orange',
+      medium: 'kanban-card purple',
+      low: 'kanban-card blue',
+    }
+    return colors[task.priority] || 'kanban-card blue'
+  }
+
+  // Get progress percentage
+  const getProgress = () => {
+    if (task.progress !== undefined) return task.progress
+    if (task.status === 'done') return 100
+    if (task.status === 'inReview') return 80
+    if (task.status === 'inProgress') return 50
+    return 0
+  }
+
+  const progressValue = getProgress()
+
   const formatDueDate = (dateString) => {
     if (!dateString) return null
 

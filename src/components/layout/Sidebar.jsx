@@ -139,9 +139,9 @@ const Sidebar = ({ open, toggleSidebar }) => {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-30 w-72 bg-white/95 backdrop-blur-xl border-r border-gray-200/80 shadow-xl transition-all duration-300 transform ${
+        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white/95 backdrop-blur-xl border-r border-gray-200/80 shadow-xl transition-all duration-500 ease-in-out transform ${
           open ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 lg:static lg:z-0 lg:bg-white lg:shadow-none`}
+        } lg:translate-x-0 lg:static lg:z-0 lg:bg-white/98 lg:shadow-sm`}
         style={{
           backgroundColor: 'var(--sidebar-bg)',
           borderColor: 'var(--border-color)',
@@ -167,15 +167,15 @@ const Sidebar = ({ open, toggleSidebar }) => {
           <FiX className="h-5 w-5" />
         </button>
 
-        <div className="px-6 py-8 border-b" style={{ borderColor: 'var(--border-color)' }}>
+        <div className="px-5 py-6 border-b" style={{ borderColor: 'var(--border-color)' }}>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg">W</span>
+              <div className="w-11 h-11 bg-gradient-to-br from-violet-500 via-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <span className="text-white font-bold text-xl">W</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Weid</h1>
-                <p className="text-sm font-medium" style={{ color: 'var(--text-tertiary)' }}>Management System</p>
+                <h1 className="text-lg font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>Weid</h1>
+                <p className="text-xs font-medium" style={{ color: 'var(--text-tertiary)' }}>Management System</p>
               </div>
             </div>
 

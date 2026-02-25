@@ -1,3 +1,5 @@
+@import './styles/theme.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,9 +7,22 @@
 @layer base {
   body {
     @apply bg-gray-50 text-gray-900 font-sans;
+    letter-spacing: -0.01em;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1 {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+
+  h2 {
+    @apply text-xl font-semibold tracking-tight;
+  }
+
+  h3 {
+    @apply text-lg font-semibold;
+  }
+
+  h4, h5, h6 {
     @apply font-medium;
   }
 }

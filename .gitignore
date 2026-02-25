@@ -47,6 +47,12 @@ lerna-debug.log*
 .tmp
 .temp
 
+# Documentation and deployment scripts
+ANIMATIONS_GUIDE.md
+deploy.sh
+ecosystem.config.cjs
+.env.example
+
 # MongoDB data directory
 /data
 
