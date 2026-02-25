@@ -5,6 +5,7 @@ import Register from './pages/auth/Register'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import ResetPassword from './pages/auth/ResetPassword'
 import Dashboard from './pages/dashboard/Dashboard'
+import UserProfile from './pages/profile/UserProfile'
 import NotFound from './pages/NotFound'
 
 const routes = (isAuthenticated) => [
@@ -14,6 +15,7 @@ const routes = (isAuthenticated) => [
     children: [
       { path: '/', element: <Navigate to="/dashboard" /> },
       { path: 'dashboard', element: <Dashboard /> },
+      { path: 'profile', element: <UserProfile /> },
       { path: '*', element: <NotFound /> }
     ]
   },

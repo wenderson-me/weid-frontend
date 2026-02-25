@@ -1,4 +1,4 @@
-import { FiHome, FiSettings } from 'react-icons/fi';
+import { FiHome, FiUser } from 'react-icons/fi';
 
 export const navigationConfig = [
   {
@@ -16,10 +16,10 @@ export const navigationConfig = [
     title: 'Account',
     items: [
       {
-        name: 'Settings',
-        icon: FiSettings,
-        path: '/settings',
-        description: 'Configure your preferences'
+        name: 'Profile',
+        icon: FiUser,
+        path: '/profile',
+        description: 'Manage your account and security'
       }
     ]
   }
@@ -31,7 +31,7 @@ export const getBreadcrumbs = (pathname) => {
   
   const breadcrumbMap = {
     'dashboard': { name: 'Dashboard', path: '/dashboard' },
-    'settings': { name: 'Settings', path: '/settings' },
+    'profile': { name: 'Profile', path: '/profile' },
   };
 
   const breadcrumbs = [{ name: 'Home', path: '/' }];
