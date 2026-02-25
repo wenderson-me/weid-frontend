@@ -6,12 +6,14 @@ import {
 } from 'react-icons/fi';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
+import useRole from '../../hooks/useRole';
 import { navigationConfig } from '../../config/navigation';
 
 const Sidebar = ({ open, toggleSidebar, collapsed }) => {
   const { currentUser, logout } = useAuth();
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { hasRole, getRoleDisplayName, getRoleBadgeColor } = useRole();
 
   const handleThemeToggle = () => {
     const newTheme = theme === 'dark' ? 'light' : theme === 'light' ? 'system' : 'dark';
@@ -87,43 +89,53 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
 
         {/* Navigation */}
         <div className={`py-6 h-[calc(100%-220px)] overflow-y-auto ${collapsed ? 'px-2' : 'px-4'}`}>
-          {navigationConfig.map((section, idx) => (
-            <div key={idx} className="mb-8">
-              {!collapsed && (
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-4 px-3 text-gray-500">
-                  {section.title}
-                </h2>
-              )}
-              <nav className="space-y-1">
-                {section.items.map((item, itemIdx) => {
-                  const Icon = item.icon;
-                  const isActive = location.pathname === item.path ||
-                                  (item.path !== '/' && location.pathname.startsWith(item.path + '/'));
+          {navigationConfig
+            .filter(section => !section.roles || hasRole(section.roles))
+            .map((section, idx) => {
+              // Filter items based on user role
+              const allowedItems = section.items.filter(item => !item.roles || hasRole(item.roles))
+              
+              // Skip section if no items are available
+              if (allowedItems.length === 0) return null
 
-                  return (
-                    <Link
-                      key={itemIdx}
-                      to={item.path}
-                      className={`group flex items-center ${collapsed ? 'justify-center px-3' : 'justify-between px-3'} py-3 rounded-xl font-medium transition-all duration-200 ${
-                        isActive
-                          ? 'bg-violet-50 text-violet-700 shadow-sm border border-violet-100'
-                          : 'text-gray-600 hover:bg-gray-50'
-                      }`}
-                      title={collapsed ? item.name : ''}
-                    >
-                      <div className={`flex items-center ${collapsed ? '' : 'space-x-3'}`}>
-                        <Icon className={`h-5 w-5 ${isActive ? 'text-violet-600' : 'text-gray-400 group-hover:text-gray-600'}`} />
-                        {!collapsed && <span>{item.name}</span>}
-                      </div>
-                      {!collapsed && isActive && (
-                        <FiChevronRight className="h-4 w-4 text-violet-500" />
-                      )}
-                    </Link>
-                  );
-                })}
-              </nav>
-            </div>
-          ))}
+              return (
+                <div key={idx} className="mb-8">
+                  {!collapsed && (
+                    <h2 className="text-xs font-bold uppercase tracking-wider mb-4 px-3 text-gray-500">
+                      {section.title}
+                    </h2>
+                  )}
+                  <nav className="space-y-1">
+                    {allowedItems.map((item, itemIdx) => {
+                      const Icon = item.icon;
+                      const isActive = location.pathname === item.path ||
+                                      (item.path !== '/' && location.pathname.startsWith(item.path + '/'));
+
+                      return (
+                        <Link
+                          key={itemIdx}
+                          to={item.path}
+                          className={`group flex items-center ${collapsed ? 'justify-center px-3' : 'justify-between px-3'} py-3 rounded-xl font-medium transition-all duration-200 ${
+                            isActive
+                              ? 'bg-violet-50 text-violet-700 shadow-sm border border-violet-100'
+                              : 'text-gray-600 hover:bg-gray-50'
+                          }`}
+                          title={collapsed ? item.name : ''}
+                        >
+                          <div className={`flex items-center ${collapsed ? '' : 'space-x-3'}`}>
+                            <Icon className={`h-5 w-5 ${isActive ? 'text-violet-600' : 'text-gray-400 group-hover:text-gray-600'}`} />
+                            {!collapsed && <span>{item.name}</span>}
+                          </div>
+                          {!collapsed && isActive && (
+                            <FiChevronRight className="h-4 w-4 text-violet-500" />
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                </div>
+              );
+            })}
         </div>
 
         {/* User section */}
@@ -151,9 +163,14 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
                   <p className="text-sm font-semibold text-gray-900 truncate">
                     {currentUser?.name?.split(' ')[0] || 'Administrator'}
                   </p>
-                  <p className="text-xs text-gray-500 truncate">
-                    {currentUser?.email || 'admin@example.com'}
-                  </p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <p className="text-xs text-gray-500 truncate">
+                      {currentUser?.email || 'admin@example.com'}
+                    </p>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${getRoleBadgeColor()}`}>
+                      {getRoleDisplayName()}
+                    </span>
+                  </div>
                 </div>
               </div>
               <button
