@@ -73,13 +73,13 @@ const UsersManagement = () => {
   }
 
   // Filter Users
-  const filteredUsers = users.filter((user) => {
+  const filteredUsers = Array.isArray(users) ? users.filter((user) => {
     const query = searchQuery.toLowerCase()
     return (
       user.name.toLowerCase().includes(query) ||
       user.email.toLowerCase().includes(query)
     )
-  })
+  }) : []
 
   // Pagination
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage)
@@ -428,7 +428,7 @@ const UsersManagement = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {paginatedUsers.map((user) => (
+                    {Array.isArray(paginatedUsers) && paginatedUsers.map((user) => (
                       <tr
                         key={user.id}
                         style={{

@@ -39,11 +39,11 @@ const UserForm = ({ initialUser, onSubmit, isLoading, mode = 'create' }) => {
   const [passwordStrength, setPasswordStrength] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
 
-  const initialValues = initialUser || {
-    name: '',
-    email: '',
-    password: '',
-    role: UserRole.USER
+  const initialValues = {
+    name: initialUser?.name || '',
+    email: initialUser?.email || '',
+    password: initialUser?.password || '',
+    role: initialUser?.role || UserRole.USER
   }
 
   const validationSchema = mode === 'edit' ? editUserValidationSchema : userValidationSchema
