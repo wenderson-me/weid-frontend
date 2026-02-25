@@ -194,28 +194,35 @@ const TaskCardModern = ({ task, isDragging, index = 0 }) => {
         {/* Avatars */}
         {task.assignees && task.assignees.length > 0 && (
           <div className="avatar-group">
-            {task.assignees.slice(0, 3).map((assignee, idx) => (
-              <div
-                key={idx}
-                className="avatar"
-                title={assignee.name}
-                style={{
-                  backgroundColor: assignee.avatar ? 'transparent' : '#e9d5ff'
-                }}
-              >
-                {assignee.avatar ? (
-                  <img
-                    src={assignee.avatar}
-                    alt={assignee.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-xs font-semibold text-purple-700">
-                    {assignee.name.charAt(0)}
-                  </div>
-                )}
-              </div>
-            ))}
+            {task.assignees.slice(0, 3).map((assignee, idx) => {
+              // Handle both string IDs and user objects
+              const isObject = typeof assignee === 'object' && assignee !== null
+              const userName = isObject ? assignee.name : 'User'
+              const userAvatar = isObject ? assignee.avatar : null
+              
+              return (
+                <div
+                  key={idx}
+                  className="avatar"
+                  title={userName}
+                  style={{
+                    backgroundColor: userAvatar ? 'transparent' : '#e9d5ff'
+                  }}
+                >
+                  {userAvatar ? (
+                    <img
+                      src={userAvatar}
+                      alt={userName}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-xs font-semibold text-purple-700">
+                      {userName.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
             {task.assignees.length > 3 && (
               <div
                 className="avatar flex items-center justify-center text-xs font-semibold bg-gray-200 text-gray-600"
