@@ -125,6 +125,92 @@ class UserService {
   }
 
   /**
+   * Create a new user (admin only)
+   * @param {Object} userData - User data to create
+   * @returns {Promise<Object>} Created user data
+   */
+  async createUser(userData) {
+    try {
+      const response = await apiClient.post('/users', userData)
+      return response.data.data
+    } catch (error) {
+      throw this._handleError(error, 'Failed to create user')
+    }
+  }
+
+  /**
+   * Update a user (admin only)
+   * @param {string} userId - User ID
+   * @param {Object} userData - User data to update
+   * @returns {Promise<Object>} Updated user data
+   */
+  async updateUser(userId, userData) {
+    try {
+      const response = await apiClient.put(`/users/${userId}`, userData)
+      return response.data.data
+    } catch (error) {
+      throw this._handleError(error, 'Failed to update user')
+    }
+  }
+
+  /**
+   * Delete a user (admin only)
+   * @param {string} userId - User ID
+   * @returns {Promise<boolean>} Success indicator
+   */
+  async deleteUser(userId) {
+    try {
+      await apiClient.delete(`/users/${userId}`)
+      return true
+    } catch (error) {
+      throw this._handleError(error, 'Failed to delete user')
+    }
+  }
+
+  /**
+   * Change a user's role (admin only)
+   * @param {string} userId - User ID
+   * @param {string} role - New role
+   * @returns {Promise<Object>} Updated user data
+   */
+  async changeUserRole(userId, role) {
+    try {
+      const response = await apiClient.patch(`/users/${userId}/role`, { role })
+      return response.data.data
+    } catch (error) {
+      throw this._handleError(error, 'Failed to change user role')
+    }
+  }
+
+  /**
+   * Deactivate a user (admin only)
+   * @param {string} userId - User ID
+   * @returns {Promise<boolean>} Success indicator
+   */
+  async deactivateUser(userId) {
+    try {
+      await apiClient.patch(`/users/${userId}/deactivate`)
+      return true
+    } catch (error) {
+      throw this._handleError(error, 'Failed to deactivate user')
+    }
+  }
+
+  /**
+   * Activate a user (admin only)
+   * @param {string} userId - User ID
+   * @returns {Promise<boolean>} Success indicator
+   */
+  async activateUser(userId) {
+    try {
+      await apiClient.patch(`/users/${userId}/activate`)
+      return true
+    } catch (error) {
+      throw this._handleError(error, 'Failed to activate user')
+    }
+  }
+
+  /**
    * Helper to handle errors
    * @private
    * @param {Error} error - The caught error

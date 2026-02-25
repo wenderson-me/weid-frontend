@@ -221,22 +221,44 @@ export const isTokenExpired = (token) => {
 /**
  * Get password strength color for UI
  * @param {string} strength - Password strength level
- * @returns {string} Tailwind color class
+ * @returns {string} Hex color value
  */
 export const getPasswordStrengthColor = (strength) => {
   switch (strength) {
     case PasswordStrength.WEAK:
-      return 'text-red-500'
+      return 'rgb(239, 68, 68)'
     case PasswordStrength.FAIR:
-      return 'text-orange-500'
+      return 'rgb(251, 146, 60)'
     case PasswordStrength.GOOD:
-      return 'text-yellow-500'
+      return 'rgb(251, 191, 36)'
     case PasswordStrength.STRONG:
-      return 'text-blue-500'
+      return 'rgb(59, 130, 246)'
     case PasswordStrength.VERY_STRONG:
-      return 'text-green-500'
+      return 'rgb(34, 197, 94)'
     default:
-      return 'text-gray-500'
+      return 'rgb(107, 114, 128)'
+  }
+}
+
+/**
+ * Get password strength message for UI
+ * @param {string} strength - Password strength level
+ * @returns {string} Message describing strength
+ */
+export const getPasswordStrengthMessage = (strength) => {
+  switch (strength) {
+    case PasswordStrength.WEAK:
+      return 'Weak - Consider a stronger password'
+    case PasswordStrength.FAIR:
+      return 'Fair - Could be stronger'
+    case PasswordStrength.GOOD:
+      return 'Good - Acceptable password'
+    case PasswordStrength.STRONG:
+      return 'Strong - Excellent choice'
+    case PasswordStrength.VERY_STRONG:
+      return 'Very Strong - Excellent security'
+    default:
+      return 'Enter a password'
   }
 }
 

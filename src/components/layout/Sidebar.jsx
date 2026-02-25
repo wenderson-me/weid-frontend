@@ -94,7 +94,7 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
             .map((section, idx) => {
               // Filter items based on user role
               const allowedItems = section.items.filter(item => !item.roles || hasRole(item.roles))
-              
+
               // Skip section if no items are available
               if (allowedItems.length === 0) return null
 

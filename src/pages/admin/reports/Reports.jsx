@@ -1,11 +1,41 @@
-import { FiBarChart2, FiDownload, FiCalendar } from 'react-icons/fi'
+import { FiBarChart2, FiDownload, FiCalendar, FiShield } from 'react-icons/fi'
 import RoleProtected from '../../../components/common/RoleProtected'
-import { UserRole } from '../../../hooks/useRole'
+import { UserRole, useRole } from '../../../hooks/useRole'
 
 const Reports = () => {
+  const { getRoleDisplayName } = useRole()
+
   return (
     <RoleProtected allowedRoles={[UserRole.ADMIN, UserRole.MANAGER]}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Access Badge */}
+        <div
+          className="mb-6 p-4 rounded-lg border flex items-center gap-3"
+          style={{
+            backgroundColor: 'rgba(59, 130, 246, 0.05)',
+            borderColor: 'rgba(59, 130, 246, 0.2)'
+          }}
+        >
+          <FiShield
+            className="w-5 h-5 flex-shrink-0"
+            style={{ color: 'rgb(59, 130, 246)' }}
+          />
+          <div className="flex-1">
+            <p
+              className="text-sm font-semibold"
+              style={{ color: 'rgb(59, 130, 246)' }}
+            >
+              Management Access Required
+            </p>
+            <p
+              className="text-xs mt-0.5"
+              style={{ color: 'var(--text-tertiary)' }}
+            >
+              Viewing as <strong>{getRoleDisplayName()}</strong> (Admins and Managers only)
+            </p>
+          </div>
+        </div>
+
         {/* Page Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
@@ -17,10 +47,10 @@ const Reports = () => {
               View system statistics and generate reports
             </p>
           </div>
-          
+
           <button
             className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors"
-            style={{ 
+            style={{
               backgroundColor: 'var(--primary-color)',
               color: 'white'
             }}
@@ -31,16 +61,16 @@ const Reports = () => {
         </div>
 
         {/* Date Range Selector */}
-        <div 
+        <div
           className="rounded-lg p-6 mb-6"
           style={{ backgroundColor: 'var(--bg-secondary)' }}
         >
           <div className="flex items-center gap-4">
-            <FiCalendar 
+            <FiCalendar
               className="w-5 h-5"
               style={{ color: 'var(--text-secondary)' }}
             />
-            <span 
+            <span
               className="font-medium"
               style={{ color: 'var(--text-primary)' }}
             >
@@ -48,7 +78,7 @@ const Reports = () => {
             </span>
             <select
               className="px-4 py-2 rounded-lg border transition-colors"
-              style={{ 
+              style={{
                 backgroundColor: 'var(--bg-primary)',
                 borderColor: 'var(--border-color)',
                 color: 'var(--text-primary)'
@@ -76,13 +106,13 @@ const Reports = () => {
               className="rounded-lg p-6"
               style={{ backgroundColor: 'var(--bg-secondary)' }}
             >
-              <p 
+              <p
                 className="text-sm font-medium mb-2"
                 style={{ color: 'var(--text-secondary)' }}
               >
                 {stat.label}
               </p>
-              <p 
+              <p
                 className="text-3xl font-bold"
                 style={{ color: 'var(--text-primary)' }}
               >
@@ -93,16 +123,16 @@ const Reports = () => {
         </div>
 
         {/* Reports Placeholder */}
-        <div 
+        <div
           className="rounded-lg p-6"
           style={{ backgroundColor: 'var(--bg-secondary)' }}
         >
           <div className="text-center py-12">
-            <FiBarChart2 
+            <FiBarChart2
               className="w-16 h-16 mx-auto mb-4"
               style={{ color: 'var(--text-tertiary)' }}
             />
-            <h3 
+            <h3
               className="text-lg font-semibold mb-2"
               style={{ color: 'var(--text-primary)' }}
             >

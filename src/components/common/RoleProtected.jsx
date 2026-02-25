@@ -9,11 +9,11 @@ import useRole from '../../hooks/useRole'
  * @param {string} props.redirectTo - Path to redirect if unauthorized
  * @param {React.ReactNode} props.fallback - Component to show if unauthorized (instead of redirect)
  */
-const RoleProtected = ({ 
-  children, 
-  allowedRoles, 
+const RoleProtected = ({
+  children,
+  allowedRoles,
   redirectTo = '/dashboard',
-  fallback = null 
+  fallback = null
 }) => {
   const { hasRole } = useRole()
 
