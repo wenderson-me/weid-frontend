@@ -163,10 +163,7 @@ const UserForm = ({ initialUser, onSubmit, isLoading, mode = 'create' }) => {
                   '--tw-ring-color': 'var(--primary-color)'
                 }}
                 disabled={isLoading}
-                onChange={(e) => {
-                  e.target.form.dispatchEvent(new Event('change'))
-                  handlePasswordChange(e)
-                }}
+                onChange={handlePasswordChange}
               />
               <button
                 type="button"
