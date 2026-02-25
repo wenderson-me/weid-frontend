@@ -199,7 +199,7 @@ const TaskCardModern = ({ task, isDragging, index = 0 }) => {
               const isObject = typeof assignee === 'object' && assignee !== null
               const userName = isObject ? assignee.name : 'User'
               const userAvatar = isObject ? assignee.avatar : null
-              
+
               return (
                 <div
                   key={idx}

@@ -1,46 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  FiHome, FiCheckSquare, FiActivity, FiCalendar, FiFileText,
-  FiUser, FiSettings, FiLogOut, FiMenu, FiX, FiChevronRight,
-  FiMoon, FiSun, FiMonitor, FiBell
+  FiHome, FiUser, FiSettings, FiLogOut, FiMenu, FiX, FiChevronRight,
+  FiMoon, FiSun, FiMonitor
 } from 'react-icons/fi';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme'
-import NotificationsMenu from '../notifications/NotificationsMenu';
-import notificationService from '../../services/notificationService';
 
 const Sidebar = ({ open, toggleSidebar }) => {
   const { currentUser, logout } = useAuth();
   const location = useLocation();
   const { theme, toggleTheme, getEffectiveTheme } = useTheme()
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
-
-  const loadUnreadCount = async () => {
-    try {
-      const count = await notificationService.getUnreadCount();
-      setUnreadCount(count);
-    } catch (error) {
-      console.error('Erro ao carregar contador de notificações:', error);
-    }
-  };
-
-  useEffect(() => {
-    loadUnreadCount();
-
-    const interval = setInterval(() => {
-      loadUnreadCount();
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    if (!notificationsOpen) {
-      loadUnreadCount();
-    }
-  }, [notificationsOpen]);
 
 
   const handleThemeToggle = () => {
@@ -78,44 +48,12 @@ const Sidebar = ({ open, toggleSidebar }) => {
           name: 'Dashboard',
           icon: <FiHome className="h-5 w-5" />,
           path: '/dashboard'
-        },
-        {
-          name: 'Tasks',
-          icon: <FiCheckSquare className="h-5 w-5" />,
-          path: '/tasks'
-        },
-        {
-          name: 'Notes',
-          icon: <FiFileText className="h-5 w-5" />,
-          path: '/notes'
-        },
-        {
-          name: 'Activities',
-          icon: <FiActivity className="h-5 w-5" />,
-          path: '/activities'
-        },
-        {
-          name: 'Schedule',
-          icon: <FiCalendar className="h-5 w-5" />,
-          path: '/schedule'
-        },
-        {
-          name: 'Notifications',
-          icon: <FiBell className="h-5 w-5" />,
-          path: '/notifications',
-          onClick: () => setNotificationsOpen(true),
-          badge: unreadCount
         }
       ]
     },
     {
       title: 'Account',
       items: [
-        {
-          name: 'Profile',
-          icon: <FiUser className="h-5 w-5" />,
-          path: '/profile'
-        },
         {
           name: 'Settings',
           icon: <FiSettings className="h-5 w-5" />,
@@ -366,13 +304,6 @@ const Sidebar = ({ open, toggleSidebar }) => {
           </div>
         </div>
       </aside>
-
-
-      <NotificationsMenu
-        isOpen={notificationsOpen}
-        onClose={() => setNotificationsOpen(false)}
-      />
-
     </>
   );
 };
