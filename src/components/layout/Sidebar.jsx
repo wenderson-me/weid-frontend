@@ -1,67 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  FiHome, FiUser, FiSettings, FiLogOut, FiMenu, FiX, FiChevronRight,
+  FiLogOut, FiX, FiChevronRight,
   FiMoon, FiSun, FiMonitor
 } from 'react-icons/fi';
 import { useAuth } from '../../hooks/useAuth';
-import { useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTheme';
+import { navigationConfig } from '../../config/navigation';
 
-const Sidebar = ({ open, toggleSidebar }) => {
+const Sidebar = ({ open, toggleSidebar, collapsed }) => {
   const { currentUser, logout } = useAuth();
   const location = useLocation();
-  const { theme, toggleTheme, getEffectiveTheme } = useTheme()
-
+  const { theme, toggleTheme } = useTheme();
 
   const handleThemeToggle = () => {
-    const newTheme = theme === 'dark' ? 'light' : theme === 'light' ? 'system' : 'dark'
-    toggleTheme(newTheme)
-  }
+    const newTheme = theme === 'dark' ? 'light' : theme === 'light' ? 'system' : 'dark';
+    toggleTheme(newTheme);
+  };
 
   const getThemeIcon = () => {
     switch (theme) {
       case 'dark':
-        return {
-          icon: <FiSun size={18} className="text-amber-400" />,
-          label: "Switch to light mode"
-        }
+        return <FiSun size={18} className="text-amber-400" />;
       case 'light':
-        return {
-          icon: <FiMoon size={18} />,
-          label: "Switch to system theme"
-        }
+        return <FiMoon size={18} />;
       default:
-        return {
-          icon: <FiMonitor size={18} className="text-gray-500" />,
-          label: "Switch to dark mode"
-        }
+        return <FiMonitor size={18} className="text-gray-500" />;
     }
-  }
-
-  const { icon, label } = getThemeIcon()
-
-  const menuItems = [
-    {
-      title: 'Main',
-      items: [
-        {
-          name: 'Dashboard',
-          icon: <FiHome className="h-5 w-5" />,
-          path: '/dashboard'
-        }
-      ]
-    },
-    {
-      title: 'Account',
-      items: [
-        {
-          name: 'Settings',
-          icon: <FiSettings className="h-5 w-5" />,
-          path: '/settings'
-        }
-      ]
-    }
-  ];
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -69,6 +35,7 @@ const Sidebar = ({ open, toggleSidebar }) => {
 
   return (
     <>
+      {/* Mobile overlay */}
       {open && (
         <div
           className="fixed inset-0 z-20 bg-black/60 backdrop-blur-sm lg:hidden transition-opacity duration-300"
@@ -77,171 +44,78 @@ const Sidebar = ({ open, toggleSidebar }) => {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white/95 backdrop-blur-xl border-r border-gray-200/80 shadow-xl transition-all duration-500 ease-in-out transform ${
+        className={`fixed inset-y-0 left-0 z-30 bg-white/95 backdrop-blur-xl border-r border-gray-200/80 shadow-xl transition-all duration-300 ease-in-out transform ${
           open ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 lg:static lg:z-0 lg:bg-white/98 lg:shadow-sm`}
+        } ${collapsed ? 'w-20' : 'w-64'} lg:translate-x-0 lg:static lg:z-0 lg:bg-white/98 lg:shadow-sm`}
         style={{
           backgroundColor: 'var(--sidebar-bg)',
           borderColor: 'var(--border-color)',
           boxShadow: 'var(--shadow-lg)'
         }}
       >
+        {/* Close button for mobile */}
         <button
           className="absolute top-5 right-5 p-2 text-gray-400 hover:bg-gray-100 rounded-xl transition-all duration-200 lg:hidden"
           onClick={toggleSidebar}
-          style={{
-            color: 'var(--text-tertiary)',
-            backgroundColor: 'transparent'
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = 'var(--hover-bg)'
-            e.target.style.color = 'var(--text-secondary)'
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = 'transparent'
-            e.target.style.color = 'var(--text-tertiary)'
-          }}
         >
-          <FiX className="h-5 w-5" />
+          <FiX size={20} />
         </button>
 
-        <div className="px-5 py-6 border-b" style={{ borderColor: 'var(--border-color)' }}>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-11 h-11 bg-gradient-to-br from-violet-500 via-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <span className="text-white font-bold text-xl">W</span>
-              </div>
-              <div>
-                <h1 className="text-lg font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>Weid</h1>
-                <p className="text-xs font-medium" style={{ color: 'var(--text-tertiary)' }}>Management System</p>
-              </div>
+        {/* Logo/Brand */}
+        <div className={`p-6 border-b border-gray-200/80 ${collapsed ? 'px-4' : ''}`}>
+          <div className={`flex items-center ${collapsed ? 'justify-center' : 'space-x-3'}`}>
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-md">
+              W
             </div>
-
+            {!collapsed && (
+              <div>
+                <h1 className="text-lg font-bold text-gray-900">Weid</h1>
+                <p className="text-xs text-gray-500">Management System</p>
+              </div>
+            )}
+          </div>
+          {!collapsed && (
             <button
               onClick={handleThemeToggle}
-              className="flex items-center justify-center p-2.5 rounded-xl transition-all duration-200 hover:scale-105 relative group"
-              style={{
-                backgroundColor: 'var(--hover-bg)',
-                color: 'var(--text-secondary)'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = 'var(--accent-primary)'
-                e.target.style.color = 'white'
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = 'var(--hover-bg)'
-                e.target.style.color = 'var(--text-secondary)'
-              }}
-              title={label}
+              className="mt-4 w-full flex items-center justify-center p-2.5 rounded-xl transition-all duration-200 hover:scale-105 bg-gray-100"
+              title="Toggle theme"
             >
-              {icon}
-              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
-                style={{
-                  backgroundColor: 'var(--bg-tooltip)',
-                  color: 'var(--text-tooltip)',
-                  boxShadow: 'var(--shadow-lg)'
-                }}>
-                {label}
-              </div>
+              {getThemeIcon()}
             </button>
-          </div>
+          )}
         </div>
 
-        <div className="px-4 py-6 h-[calc(100%-220px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-          {menuItems.map((section, idx) => (
+        {/* Navigation */}
+        <div className={`py-6 h-[calc(100%-220px)] overflow-y-auto ${collapsed ? 'px-2' : 'px-4'}`}>
+          {navigationConfig.map((section, idx) => (
             <div key={idx} className="mb-8">
-              <h2 className="text-xs font-bold uppercase tracking-wider mb-4 px-3" style={{ color: 'var(--text-tertiary)' }}>
-                {section.title}
-              </h2>
+              {!collapsed && (
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-4 px-3 text-gray-500">
+                  {section.title}
+                </h2>
+              )}
               <nav className="space-y-1">
                 {section.items.map((item, itemIdx) => {
+                  const Icon = item.icon;
                   const isActive = location.pathname === item.path ||
                                   (item.path !== '/' && location.pathname.startsWith(item.path + '/'));
-
-                  if (item.onClick) {
-                    return (
-                      <button
-                        key={itemIdx}
-                        onClick={item.onClick}
-                        className={`group flex items-center justify-between px-3 py-3 rounded-xl font-medium transition-all duration-200 w-full text-left ${
-                          isActive
-                            ? 'bg-gradient-to-r from-violet-50 to-purple-50 text-violet-700 shadow-sm border border-violet-100'
-                            : 'hover:bg-gray-50'
-                        }`}
-                        style={{
-                          color: isActive ? '#6366f1' : 'var(--text-secondary)',
-                          backgroundColor: isActive ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
-                          borderColor: isActive ? 'rgba(99, 102, 241, 0.2)' : 'transparent'
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isActive) {
-                            e.target.style.backgroundColor = 'var(--hover-bg)'
-                            e.target.style.color = 'var(--text-primary)'
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isActive) {
-                            e.target.style.backgroundColor = 'transparent'
-                            e.target.style.color = 'var(--text-secondary)'
-                          }
-                        }}
-                      >
-                        <div className="flex items-center space-x-3">
-                          <div className={`p-1 rounded-lg transition-colors relative ${
-                            isActive ? 'text-violet-600' : 'text-gray-400 group-hover:text-gray-600'
-                          }`}>
-                            {item.icon}
-                            {item.badge > 0 && (
-                              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
-                                {item.badge > 99 ? '99+' : item.badge}
-                              </span>
-                            )}
-                          </div>
-                          <span className="font-medium">{item.name}</span>
-                        </div>
-                        {isActive && (
-                          <FiChevronRight className="h-4 w-4 text-violet-500" />
-                        )}
-                      </button>
-                    );
-                  }
 
                   return (
                     <Link
                       key={itemIdx}
                       to={item.path}
-                      className={`group flex items-center justify-between px-3 py-3 rounded-xl font-medium transition-all duration-200 ${
+                      className={`group flex items-center ${collapsed ? 'justify-center px-3' : 'justify-between px-3'} py-3 rounded-xl font-medium transition-all duration-200 ${
                         isActive
-                          ? 'bg-gradient-to-r from-violet-50 to-purple-50 text-violet-700 shadow-sm border border-violet-100'
-                          : 'hover:bg-gray-50'
+                          ? 'bg-violet-50 text-violet-700 shadow-sm border border-violet-100'
+                          : 'text-gray-600 hover:bg-gray-50'
                       }`}
-                      style={{
-                        color: isActive ? '#6366f1' : 'var(--text-secondary)',
-                        backgroundColor: isActive ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
-                        borderColor: isActive ? 'rgba(99, 102, 241, 0.2)' : 'transparent'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive) {
-                          e.target.style.backgroundColor = 'var(--hover-bg)'
-                          e.target.style.color = 'var(--text-primary)'
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive) {
-                          e.target.style.backgroundColor = 'transparent'
-                          e.target.style.color = 'var(--text-secondary)'
-                        }
-                      }}
+                      title={collapsed ? item.name : ''}
                     >
-                      <div className="flex items-center space-x-3">
-                        <div className={`p-1 rounded-lg transition-colors ${
-                          isActive ? 'text-violet-600' : 'text-gray-400 group-hover:text-gray-600'
-                        }`}>
-                          {item.icon}
-                        </div>
-                        <span className="font-medium">{item.name}</span>
+                      <div className={`flex items-center ${collapsed ? '' : 'space-x-3'}`}>
+                        <Icon className={`h-5 w-5 ${isActive ? 'text-violet-600' : 'text-gray-400 group-hover:text-gray-600'}`} />
+                        {!collapsed && <span>{item.name}</span>}
                       </div>
-                      {isActive && (
+                      {!collapsed && isActive && (
                         <FiChevronRight className="h-4 w-4 text-violet-500" />
                       )}
                     </Link>
@@ -252,56 +126,45 @@ const Sidebar = ({ open, toggleSidebar }) => {
           ))}
         </div>
 
-        <div
-          className="absolute bottom-0 left-0 right-0 p-4 border-t backdrop-blur-sm"
-          style={{
-            borderColor: 'var(--border-color)',
-            backgroundColor: 'var(--bg-secondary)'
-          }}
-        >
-          <div
-            className="flex items-center justify-between p-3 rounded-xl border shadow-sm"
-            style={{
-              backgroundColor: 'var(--bg-primary)',
-              borderColor: 'var(--border-color)'
-            }}
-          >
-            <div className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-md">
-                  {currentUser?.name?.charAt(0) || 'U'}
-                </div>
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"></div>
+        {/* User section */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-gray-50/50">
+          {collapsed ? (
+            <div className="flex flex-col items-center space-y-3">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white">
+                {currentUser?.name?.charAt(0).toUpperCase() || 'A'}
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
-                  {currentUser?.name || 'User'}
-                </p>
-                <p className="text-xs truncate" style={{ color: 'var(--text-tertiary)' }}>
-                  {currentUser?.email || 'user@example.com'}
-                </p>
-              </div>
+              <button
+                onClick={handleLogout}
+                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                title="Logout"
+              >
+                <FiLogOut className="h-5 w-5" />
+              </button>
             </div>
-            <button
-              onClick={handleLogout}
-              className="p-2.5 rounded-xl transition-all duration-200 group"
-              style={{
-                color: 'var(--text-tertiary)',
-                backgroundColor: 'transparent'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'
-                e.target.style.color = '#ef4444'
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = 'transparent'
-                e.target.style.color = 'var(--text-tertiary)'
-              }}
-              title="Logout"
-            >
-              <FiLogOut className="h-5 w-5 group-hover:scale-110 transition-transform" />
-            </button>
-          </div>
+          ) : (
+            <div className="flex items-center justify-between p-3 rounded-xl border border-gray-200 bg-white shadow-sm">
+              <div className="flex items-center space-x-3 min-w-0 flex-1">
+                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white flex-shrink-0">
+                  {currentUser?.name?.charAt(0).toUpperCase() || 'A'}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-gray-900 truncate">
+                    {currentUser?.name?.split(' ')[0] || 'Administrator'}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {currentUser?.email || 'admin@example.com'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all flex-shrink-0"
+                title="Logout"
+              >
+                <FiLogOut className="h-5 w-5" />
+              </button>
+            </div>
+          )}
         </div>
       </aside>
     </>

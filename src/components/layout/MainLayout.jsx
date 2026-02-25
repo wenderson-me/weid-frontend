@@ -5,63 +5,53 @@ import Header from './Header'
 
 const MainLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const location = useLocation()
-  const [title, setTitle] = useState('')
 
   useEffect(() => {
-    const pathname = location.pathname
-
-    if (pathname.includes('/dashboard')) {
-      setTitle('Dashboard')
-    } else if (pathname.includes('/tasks')) {
-      setTitle('Tasks')
-    } else if (pathname.includes('/activities')) {
-      setTitle('Activities')
-    } else if (pathname.includes('/notes')) {
-      setTitle('Notes')
-    } else if (pathname.includes('/schedule')) {
-      setTitle('Schedule')
-    } else if (pathname.includes('/products')) {
-      setTitle('Products')
-    } else if (pathname.includes('/settings')) {
-      setTitle('Settings')
-    } else if (pathname.includes('/profile')) {
-      setTitle('Profile')
-    } else {
-      setTitle('Weid')
-    }
-
+    // Auto-close sidebar on mobile
     if (window.innerWidth <= 1024) {
       setSidebarOpen(false)
     }
   }, [location])
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen)
+    if (window.innerWidth <= 1024) {
+      // Mobile: toggle open/close
+      setSidebarOpen(!sidebarOpen)
+    } else {
+      // Desktop: toggle collapse
+      setSidebarCollapsed(!sidebarCollapsed)
+    }
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Sidebar */}
-      <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <Sidebar 
+        open={sidebarOpen} 
+        toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+        collapsed={sidebarCollapsed}
+      />
 
+      {/* Main content area */}
+      <div className="flex flex-col flex-1 overflow-hidden">
+        {/* Header */}
+        <Header 
+          toggleSidebar={toggleSidebar}
+          sidebarCollapsed={sidebarCollapsed}
+        />
 
-        <div className="flex flex-col flex-1 overflow-hidden">
-           {/* Main Content
-          <Header
-            title={title}
-            toggleSidebar={toggleSidebar}
-          />
-           */}
-
-
-          <main className="flex-1 overflow-auto p-6">
+        {/* Page content */}
+        <main className="flex-1 overflow-auto">
+          <div className="p-6">
             <div className="max-w-7xl mx-auto">
               <Outlet />
             </div>
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
+    </div>
   )
 }
 
