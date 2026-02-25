@@ -21,7 +21,7 @@ const routes = (isAuthenticated) => [
     path: '/',
     element: isAuthenticated ? <MainLayout /> : <Navigate to="/login" />,
     children: [
-      { path: '/', element: <Navigate to="/tasks" /> },
+      { path: '/', element: <Navigate to="/dashboard" /> },
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'tasks', element: <TaskBoard /> },
       { path: 'tasks/new', element: <TaskEdit /> },
@@ -39,23 +39,23 @@ const routes = (isAuthenticated) => [
   },
   {
     path: '/',
-    element: !isAuthenticated ? <Navigate to="/login" /> : <Navigate to="/tasks" />,
+    element: !isAuthenticated ? <Navigate to="/login" /> : <Navigate to="/dashboard" />,
   },
   {
     path: '/login',
-    element: !isAuthenticated ? <Login /> : <Navigate to="/tasks" />
+    element: !isAuthenticated ? <Login /> : <Navigate to="/dashboard" />
   },
   {
     path: '/register',
-    element: !isAuthenticated ? <Register /> : <Navigate to="/tasks" />
+    element: !isAuthenticated ? <Register /> : <Navigate to="/dashboard" />
   },
   {
     path: '/forgot-password',
-    element: !isAuthenticated ? <ForgotPassword /> : <Navigate to="/tasks" />
+    element: !isAuthenticated ? <ForgotPassword /> : <Navigate to="/dashboard" />
   },
   {
     path: '/reset-password',
-    element: !isAuthenticated ? <ResetPassword /> : <Navigate to="/tasks" />
+    element: !isAuthenticated ? <ResetPassword /> : <Navigate to="/dashboard" />
   },
   {
     path: '*',

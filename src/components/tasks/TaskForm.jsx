@@ -32,13 +32,21 @@ const taskSchema = Yup.object().shape({
     .required('Priority is required'),
   dueDate: Yup.date()
     .nullable()
+    .transform((value, originalValue) => {
+      // Convert empty string to null
+      return originalValue === '' ? null : value;
+    })
     .min(
       new Date(new Date().setHours(0, 0, 0, 0)),
       'Due date cannot be in the past'
     ),
   estimatedHours: Yup.number()
     .positive('Estimated hours must be positive')
-    .nullable(),
+    .nullable()
+    .transform((value, originalValue) => {
+      // Convert empty string to null
+      return originalValue === '' ? null : value;
+    }),
 })
 
 const TaskForm = ({ taskId }) => {
@@ -136,12 +144,25 @@ const TaskForm = ({ taskId }) => {
 
       const formattedValues = {
         ...values,
-
-        dueDate: values.dueDate || null,
-        estimatedHours: values.estimatedHours ? Number(values.estimatedHours) : null,
+        // Ensure assignees is a valid array of IDs
+        assignees: Array.isArray(values.assignees) ? values.assignees.filter(id => id && typeof id === 'string') : [],
       }
 
+      // Only include dueDate if it has a valid value
+      if (values.dueDate && values.dueDate.trim() !== '') {
+        formattedValues.dueDate = values.dueDate
+      } else {
+        delete formattedValues.dueDate
+      }
 
+      // Only include estimatedHours if it has a valid value
+      if (values.estimatedHours) {
+        formattedValues.estimatedHours = Number(values.estimatedHours)
+      } else {
+        delete formattedValues.estimatedHours
+      }
+
+      // Remove newTag field if present
       if ('newTag' in formattedValues) {
         delete formattedValues.newTag
       }
