@@ -28,14 +28,14 @@ export const navigationConfig = [
 // Breadcrumb configuration
 export const getBreadcrumbs = (pathname) => {
   const paths = pathname.split('/').filter(Boolean);
-  
+
   const breadcrumbMap = {
     'dashboard': { name: 'Dashboard', path: '/dashboard' },
     'profile': { name: 'Profile', path: '/profile' },
   };
 
   const breadcrumbs = [{ name: 'Home', path: '/' }];
-  
+
   paths.forEach((path, index) => {
     const currentPath = '/' + paths.slice(0, index + 1).join('/');
     if (breadcrumbMap[path]) {

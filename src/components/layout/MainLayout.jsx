@@ -28,8 +28,8 @@ const MainLayout = () => {
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Sidebar */}
-      <Sidebar 
-        open={sidebarOpen} 
+      <Sidebar
+        open={sidebarOpen}
         toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         collapsed={sidebarCollapsed}
       />
@@ -37,7 +37,7 @@ const MainLayout = () => {
       {/* Main content area */}
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Header */}
-        <Header 
+        <Header
           toggleSidebar={toggleSidebar}
           sidebarCollapsed={sidebarCollapsed}
         />

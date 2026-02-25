@@ -75,15 +75,15 @@ const ProfileInfo = () => {
     try {
       // Prepare data (only send changed fields)
       const updateData = {}
-      
+
       if (formData.name !== currentUser.name) {
         updateData.name = formData.name
       }
-      
+
       if (formData.bio !== currentUser.bio) {
         updateData.bio = formData.bio
       }
-      
+
       if (formData.phoneNumber !== currentUser.phoneNumber) {
         updateData.phoneNumber = formData.phoneNumber
       }
@@ -102,7 +102,7 @@ const ProfileInfo = () => {
 
       setSuccess('Profile updated successfully')
       setIsEditing(false)
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(null), 3000)
     } catch (err) {
@@ -127,16 +127,16 @@ const ProfileInfo = () => {
   return (
     <div className="space-y-6">
       {/* Avatar Section */}
-      <div 
+      <div
         className="rounded-lg p-6"
         style={{ backgroundColor: 'var(--bg-secondary)' }}
       >
         <div className="flex items-center space-x-6">
           {/* Avatar */}
           <div className="relative">
-            <div 
+            <div
               className="w-24 h-24 rounded-full flex items-center justify-center overflow-hidden"
-              style={{ 
+              style={{
                 backgroundColor: 'var(--primary-color)',
                 backgroundImage: formData.avatar ? `url(${formData.avatar})` : 'none',
                 backgroundSize: 'cover',
@@ -147,11 +147,11 @@ const ProfileInfo = () => {
                 <FiUser className="w-12 h-12 text-white" />
               )}
             </div>
-            
+
             {isEditing && (
-              <label 
+              <label
                 className="absolute bottom-0 right-0 p-2 rounded-full cursor-pointer transition-colors"
-                style={{ 
+                style={{
                   backgroundColor: 'var(--primary-color)',
                   color: 'white'
                 }}
@@ -169,20 +169,20 @@ const ProfileInfo = () => {
 
           {/* User Info */}
           <div className="flex-1">
-            <h2 
+            <h2
               className="text-2xl font-bold"
               style={{ color: 'var(--text-primary)' }}
             >
               {currentUser?.name}
             </h2>
-            <p 
+            <p
               className="flex items-center gap-2 mt-1"
               style={{ color: 'var(--text-secondary)' }}
             >
               <FiMail className="w-4 h-4" />
               {currentUser?.email}
             </p>
-            <p 
+            <p
               className="text-sm mt-2"
               style={{ color: 'var(--text-tertiary)' }}
             >
@@ -194,9 +194,9 @@ const ProfileInfo = () => {
 
       {/* Messages */}
       {error && (
-        <div 
+        <div
           className="rounded-lg p-4 border"
-          style={{ 
+          style={{
             backgroundColor: 'rgba(239, 68, 68, 0.1)',
             borderColor: 'rgb(239, 68, 68)',
             color: 'rgb(239, 68, 68)'
@@ -207,9 +207,9 @@ const ProfileInfo = () => {
       )}
 
       {success && (
-        <div 
+        <div
           className="rounded-lg p-4 border"
-          style={{ 
+          style={{
             backgroundColor: 'rgba(34, 197, 94, 0.1)',
             borderColor: 'rgb(34, 197, 94)',
             color: 'rgb(34, 197, 94)'
@@ -221,24 +221,24 @@ const ProfileInfo = () => {
 
       {/* Profile Form */}
       <form onSubmit={handleSubmit}>
-        <div 
+        <div
           className="rounded-lg p-6 space-y-6"
           style={{ backgroundColor: 'var(--bg-secondary)' }}
         >
           <div className="flex justify-between items-center mb-4">
-            <h3 
+            <h3
               className="text-lg font-semibold"
               style={{ color: 'var(--text-primary)' }}
             >
               Personal Information
             </h3>
-            
+
             {!isEditing && (
               <button
                 type="button"
                 onClick={() => setIsEditing(true)}
                 className="px-4 py-2 rounded-lg transition-colors"
-                style={{ 
+                style={{
                   backgroundColor: 'var(--primary-color)',
                   color: 'white'
                 }}
@@ -251,7 +251,7 @@ const ProfileInfo = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name */}
             <div>
-              <label 
+              <label
                 className="block text-sm font-medium mb-2"
                 style={{ color: 'var(--text-secondary)' }}
               >
@@ -264,7 +264,7 @@ const ProfileInfo = () => {
                 onChange={handleChange}
                 disabled={!isEditing}
                 className="w-full px-4 py-2 rounded-lg border transition-colors"
-                style={{ 
+                style={{
                   backgroundColor: isEditing ? 'var(--bg-primary)' : 'var(--bg-tertiary)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-primary)'
@@ -275,7 +275,7 @@ const ProfileInfo = () => {
 
             {/* Email (read-only) */}
             <div>
-              <label 
+              <label
                 className="block text-sm font-medium mb-2"
                 style={{ color: 'var(--text-secondary)' }}
               >
@@ -287,13 +287,13 @@ const ProfileInfo = () => {
                 value={formData.email}
                 disabled
                 className="w-full px-4 py-2 rounded-lg border cursor-not-allowed"
-                style={{ 
+                style={{
                   backgroundColor: 'var(--bg-tertiary)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-tertiary)'
                 }}
               />
-              <p 
+              <p
                 className="text-xs mt-1"
                 style={{ color: 'var(--text-tertiary)' }}
               >
@@ -303,7 +303,7 @@ const ProfileInfo = () => {
 
             {/* Phone */}
             <div>
-              <label 
+              <label
                 className="block text-sm font-medium mb-2"
                 style={{ color: 'var(--text-secondary)' }}
               >
@@ -317,7 +317,7 @@ const ProfileInfo = () => {
                 disabled={!isEditing}
                 placeholder="+1 (555) 123-4567"
                 className="w-full px-4 py-2 rounded-lg border transition-colors"
-                style={{ 
+                style={{
                   backgroundColor: isEditing ? 'var(--bg-primary)' : 'var(--bg-tertiary)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-primary)'
@@ -328,7 +328,7 @@ const ProfileInfo = () => {
 
           {/* Bio */}
           <div>
-            <label 
+            <label
               className="block text-sm font-medium mb-2"
               style={{ color: 'var(--text-secondary)' }}
             >
@@ -342,7 +342,7 @@ const ProfileInfo = () => {
               rows={4}
               placeholder="Tell us about yourself..."
               className="w-full px-4 py-2 rounded-lg border transition-colors resize-none"
-              style={{ 
+              style={{
                 backgroundColor: isEditing ? 'var(--bg-primary)' : 'var(--bg-tertiary)',
                 borderColor: 'var(--border-color)',
                 color: 'var(--text-primary)'
@@ -358,7 +358,7 @@ const ProfileInfo = () => {
                 onClick={handleCancel}
                 disabled={loading}
                 className="px-6 py-2 rounded-lg border transition-colors flex items-center gap-2"
-                style={{ 
+                style={{
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-secondary)',
                   backgroundColor: 'transparent'
@@ -367,12 +367,12 @@ const ProfileInfo = () => {
                 <FiX className="w-4 h-4" />
                 Cancel
               </button>
-              
+
               <button
                 type="submit"
                 disabled={loading}
                 className="px-6 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
-                style={{ 
+                style={{
                   backgroundColor: 'var(--primary-color)',
                   color: 'white'
                 }}

@@ -91,7 +91,7 @@ export const checkPasswordStrength = (password) => {
   // Additional checks for bonus points
   if (password.length >= 12) score += 5
   if (password.length >= 16) score += 5
-  
+
   // Check for sequential characters (lower score)
   if (/(.)\1{2,}/.test(password)) {
     score -= 10
@@ -120,7 +120,7 @@ export const checkPasswordStrength = (password) => {
   }
 
   // Check if password meets minimum requirements
-  const isValid = checks.hasMinLength && 
+  const isValid = checks.hasMinLength &&
                   checks.hasMaxLength &&
                   (!PASSWORD_REQUIREMENTS.requireUppercase || checks.hasUppercase) &&
                   (!PASSWORD_REQUIREMENTS.requireLowercase || checks.hasLowercase) &&

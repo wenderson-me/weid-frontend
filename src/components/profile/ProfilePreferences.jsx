@@ -49,9 +49,9 @@ const ProfilePreferences = () => {
     try {
       const updatedUser = await userService.updatePreferences(preferences)
       setCurrentUser(updatedUser)
-      
+
       setSuccess('Preferences updated successfully')
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(null), 3000)
     } catch (err) {
@@ -77,9 +77,9 @@ const ProfilePreferences = () => {
     <div className="space-y-6">
       {/* Messages */}
       {error && (
-        <div 
+        <div
           className="rounded-lg p-4 border"
-          style={{ 
+          style={{
             backgroundColor: 'rgba(239, 68, 68, 0.1)',
             borderColor: 'rgb(239, 68, 68)',
             color: 'rgb(239, 68, 68)'
@@ -90,9 +90,9 @@ const ProfilePreferences = () => {
       )}
 
       {success && (
-        <div 
+        <div
           className="rounded-lg p-4 border"
-          style={{ 
+          style={{
             backgroundColor: 'rgba(34, 197, 94, 0.1)',
             borderColor: 'rgb(34, 197, 94)',
             color: 'rgb(34, 197, 94)'
@@ -104,11 +104,11 @@ const ProfilePreferences = () => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Appearance */}
-        <div 
+        <div
           className="rounded-lg p-6"
           style={{ backgroundColor: 'var(--bg-secondary)' }}
         >
-          <h3 
+          <h3
             className="text-lg font-semibold mb-4"
             style={{ color: 'var(--text-primary)' }}
           >
@@ -116,7 +116,7 @@ const ProfilePreferences = () => {
           </h3>
 
           <div className="space-y-4">
-            <label 
+            <label
               className="block text-sm font-medium mb-2"
               style={{ color: 'var(--text-secondary)' }}
             >
@@ -150,16 +150,16 @@ const ProfilePreferences = () => {
         </div>
 
         {/* Language & Region */}
-        <div 
+        <div
           className="rounded-lg p-6"
           style={{ backgroundColor: 'var(--bg-secondary)' }}
         >
           <div className="flex items-center gap-2 mb-4">
-            <FiGlobe 
+            <FiGlobe
               className="w-5 h-5"
               style={{ color: 'var(--primary-color)' }}
             />
-            <h3 
+            <h3
               className="text-lg font-semibold"
               style={{ color: 'var(--text-primary)' }}
             >
@@ -170,7 +170,7 @@ const ProfilePreferences = () => {
           <div className="space-y-4">
             {/* Language */}
             <div>
-              <label 
+              <label
                 className="block text-sm font-medium mb-2"
                 style={{ color: 'var(--text-secondary)' }}
               >
@@ -180,7 +180,7 @@ const ProfilePreferences = () => {
                 value={preferences.language}
                 onChange={(e) => handlePreferenceChange('language', e.target.value)}
                 className="w-full px-4 py-2 rounded-lg border transition-colors"
-                style={{ 
+                style={{
                   backgroundColor: 'var(--bg-primary)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-primary)'
@@ -196,7 +196,7 @@ const ProfilePreferences = () => {
 
             {/* Timezone */}
             <div>
-              <label 
+              <label
                 className="block text-sm font-medium mb-2"
                 style={{ color: 'var(--text-secondary)' }}
               >
@@ -207,13 +207,13 @@ const ProfilePreferences = () => {
                 value={preferences.timezone}
                 disabled
                 className="w-full px-4 py-2 rounded-lg border cursor-not-allowed"
-                style={{ 
+                style={{
                   backgroundColor: 'var(--bg-tertiary)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-tertiary)'
                 }}
               />
-              <p 
+              <p
                 className="text-xs mt-1"
                 style={{ color: 'var(--text-tertiary)' }}
               >
@@ -224,16 +224,16 @@ const ProfilePreferences = () => {
         </div>
 
         {/* Notifications */}
-        <div 
+        <div
           className="rounded-lg p-6"
           style={{ backgroundColor: 'var(--bg-secondary)' }}
         >
           <div className="flex items-center gap-2 mb-4">
-            <FiBell 
+            <FiBell
               className="w-5 h-5"
               style={{ color: 'var(--primary-color)' }}
             />
-            <h3 
+            <h3
               className="text-lg font-semibold"
               style={{ color: 'var(--text-primary)' }}
             >
@@ -245,18 +245,18 @@ const ProfilePreferences = () => {
             {/* Email Notifications */}
             <div className="flex items-center justify-between">
               <div className="flex items-start gap-3">
-                <FiMail 
+                <FiMail
                   className="w-5 h-5 mt-1"
                   style={{ color: 'var(--text-secondary)' }}
                 />
                 <div>
-                  <p 
+                  <p
                     className="font-medium"
                     style={{ color: 'var(--text-primary)' }}
                   >
                     Email Notifications
                   </p>
-                  <p 
+                  <p
                     className="text-sm"
                     style={{ color: 'var(--text-tertiary)' }}
                   >
@@ -271,9 +271,9 @@ const ProfilePreferences = () => {
                   onChange={(e) => handlePreferenceChange('emailNotifications', e.target.checked)}
                   className="sr-only peer"
                 />
-                <div 
+                <div
                   className="w-11 h-6 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"
-                  style={{ 
+                  style={{
                     backgroundColor: preferences.emailNotifications ? 'var(--primary-color)' : 'var(--border-color)'
                   }}
                 />
@@ -283,18 +283,18 @@ const ProfilePreferences = () => {
             {/* Push Notifications */}
             <div className="flex items-center justify-between">
               <div className="flex items-start gap-3">
-                <FiBell 
+                <FiBell
                   className="w-5 h-5 mt-1"
                   style={{ color: 'var(--text-secondary)' }}
                 />
                 <div>
-                  <p 
+                  <p
                     className="font-medium"
                     style={{ color: 'var(--text-primary)' }}
                   >
                     Push Notifications
                   </p>
-                  <p 
+                  <p
                     className="text-sm"
                     style={{ color: 'var(--text-tertiary)' }}
                   >
@@ -309,9 +309,9 @@ const ProfilePreferences = () => {
                   onChange={(e) => handlePreferenceChange('pushNotifications', e.target.checked)}
                   className="sr-only peer"
                 />
-                <div 
+                <div
                   className="w-11 h-6 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"
-                  style={{ 
+                  style={{
                     backgroundColor: preferences.pushNotifications ? 'var(--primary-color)' : 'var(--border-color)'
                   }}
                 />
@@ -321,18 +321,18 @@ const ProfilePreferences = () => {
             {/* Task Reminders */}
             <div className="flex items-center justify-between">
               <div className="flex items-start gap-3">
-                <FiBell 
+                <FiBell
                   className="w-5 h-5 mt-1"
                   style={{ color: 'var(--text-secondary)' }}
                 />
                 <div>
-                  <p 
+                  <p
                     className="font-medium"
                     style={{ color: 'var(--text-primary)' }}
                   >
                     Task Reminders
                   </p>
-                  <p 
+                  <p
                     className="text-sm"
                     style={{ color: 'var(--text-tertiary)' }}
                   >
@@ -347,9 +347,9 @@ const ProfilePreferences = () => {
                   onChange={(e) => handlePreferenceChange('taskReminders', e.target.checked)}
                   className="sr-only peer"
                 />
-                <div 
+                <div
                   className="w-11 h-6 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"
-                  style={{ 
+                  style={{
                     backgroundColor: preferences.taskReminders ? 'var(--primary-color)' : 'var(--border-color)'
                   }}
                 />
@@ -359,18 +359,18 @@ const ProfilePreferences = () => {
             {/* Weekly Digest */}
             <div className="flex items-center justify-between">
               <div className="flex items-start gap-3">
-                <FiMail 
+                <FiMail
                   className="w-5 h-5 mt-1"
                   style={{ color: 'var(--text-secondary)' }}
                 />
                 <div>
-                  <p 
+                  <p
                     className="font-medium"
                     style={{ color: 'var(--text-primary)' }}
                   >
                     Weekly Digest
                   </p>
-                  <p 
+                  <p
                     className="text-sm"
                     style={{ color: 'var(--text-tertiary)' }}
                   >
@@ -385,9 +385,9 @@ const ProfilePreferences = () => {
                   onChange={(e) => handlePreferenceChange('weeklyDigest', e.target.checked)}
                   className="sr-only peer"
                 />
-                <div 
+                <div
                   className="w-11 h-6 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"
-                  style={{ 
+                  style={{
                     backgroundColor: preferences.weeklyDigest ? 'var(--primary-color)' : 'var(--border-color)'
                   }}
                 />
@@ -402,7 +402,7 @@ const ProfilePreferences = () => {
             type="submit"
             disabled={loading}
             className="px-6 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
-            style={{ 
+            style={{
               backgroundColor: 'var(--primary-color)',
               color: 'white'
             }}

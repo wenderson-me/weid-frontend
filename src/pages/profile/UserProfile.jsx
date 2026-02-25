@@ -9,20 +9,20 @@ const UserProfile = () => {
   const [activeTab, setActiveTab] = useState('info')
 
   const tabs = [
-    { 
-      id: 'info', 
-      label: 'Personal Information', 
-      icon: FiUser 
+    {
+      id: 'info',
+      label: 'Personal Information',
+      icon: FiUser
     },
-    { 
-      id: 'security', 
-      label: 'Security', 
-      icon: FiShield 
+    {
+      id: 'security',
+      label: 'Security',
+      icon: FiShield
     },
-    { 
-      id: 'preferences', 
-      label: 'Preferences', 
-      icon: FiSettings 
+    {
+      id: 'preferences',
+      label: 'Preferences',
+      icon: FiSettings
     },
   ]
 

@@ -1,13 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FiLock, FiEye, FiEyeOff, FiShield, FiAlertCircle, FiCheckCircle, FiClock } from 'react-icons/fi'
 import authService from '../../services/authService'
 import { securityUtils } from '../../config/axios'
-import { 
-  checkPasswordStrength, 
+import {
+  checkPasswordStrength,
   validatePasswordConfirmation,
   getPasswordStrengthColor,
   getPasswordStrengthBgColor,
-  formatTimeRemaining 
+  formatTimeRemaining
 } from '../../utils/securityUtils'
 
 const ProfileSecurity = () => {
@@ -30,7 +30,7 @@ const ProfileSecurity = () => {
   const [passwordStrength, setPasswordStrength] = useState(null)
 
   // Update session time remaining every second
-  useState(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       setSessionTimeRemaining(securityUtils.getSessionTimeRemaining())
     }, 1000)
@@ -103,16 +103,16 @@ const ProfileSecurity = () => {
   return (
     <div className="space-y-6">
       {/* Session Info */}
-      <div 
+      <div
         className="rounded-lg p-6"
         style={{ backgroundColor: 'var(--bg-secondary)' }}
       >
         <div className="flex items-center gap-3 mb-4">
-          <FiClock 
+          <FiClock
             className="w-5 h-5"
             style={{ color: 'var(--primary-color)' }}
           />
-          <h3 
+          <h3
             className="text-lg font-semibold"
             style={{ color: 'var(--text-primary)' }}
           >
@@ -125,7 +125,7 @@ const ProfileSecurity = () => {
             <span style={{ color: 'var(--text-secondary)' }}>
               Session Status
             </span>
-            <span 
+            <span
               className="flex items-center gap-2"
               style={{ color: 'var(--success-color)' }}
             >
@@ -138,7 +138,7 @@ const ProfileSecurity = () => {
             <span style={{ color: 'var(--text-secondary)' }}>
               Time Remaining
             </span>
-            <span 
+            <span
               className="font-mono text-sm"
               style={{ color: 'var(--text-primary)' }}
             >
@@ -146,16 +146,16 @@ const ProfileSecurity = () => {
             </span>
           </div>
 
-          <div 
+          <div
             className="text-sm p-3 rounded-lg flex items-start gap-2"
-            style={{ 
+            style={{
               backgroundColor: 'var(--bg-tertiary)',
               color: 'var(--text-tertiary)'
             }}
           >
             <FiAlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <p>
-              Your session will automatically expire after 30 minutes of inactivity. 
+              Your session will automatically expire after 30 minutes of inactivity.
               Any activity will reset the timer.
             </p>
           </div>
@@ -164,9 +164,9 @@ const ProfileSecurity = () => {
 
       {/* Messages */}
       {error && (
-        <div 
+        <div
           className="rounded-lg p-4 border flex items-start gap-3"
-          style={{ 
+          style={{
             backgroundColor: 'rgba(239, 68, 68, 0.1)',
             borderColor: 'rgb(239, 68, 68)',
             color: 'rgb(239, 68, 68)'
@@ -178,9 +178,9 @@ const ProfileSecurity = () => {
       )}
 
       {success && (
-        <div 
+        <div
           className="rounded-lg p-4 border flex items-start gap-3"
-          style={{ 
+          style={{
             backgroundColor: 'rgba(34, 197, 94, 0.1)',
             borderColor: 'rgb(34, 197, 94)',
             color: 'rgb(34, 197, 94)'
@@ -193,16 +193,16 @@ const ProfileSecurity = () => {
 
       {/* Change Password Form */}
       <form onSubmit={handleSubmitPassword}>
-        <div 
+        <div
           className="rounded-lg p-6 space-y-6"
           style={{ backgroundColor: 'var(--bg-secondary)' }}
         >
           <div className="flex items-center gap-3">
-            <FiLock 
+            <FiLock
               className="w-5 h-5"
               style={{ color: 'var(--primary-color)' }}
             />
-            <h3 
+            <h3
               className="text-lg font-semibold"
               style={{ color: 'var(--text-primary)' }}
             >
@@ -212,7 +212,7 @@ const ProfileSecurity = () => {
 
           {/* Current Password */}
           <div>
-            <label 
+            <label
               className="block text-sm font-medium mb-2"
               style={{ color: 'var(--text-secondary)' }}
             >
@@ -225,7 +225,7 @@ const ProfileSecurity = () => {
                 value={passwordData.currentPassword}
                 onChange={handlePasswordChange}
                 className="w-full px-4 py-2 pr-12 rounded-lg border transition-colors"
-                style={{ 
+                style={{
                   backgroundColor: 'var(--bg-primary)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-primary)'
@@ -245,7 +245,7 @@ const ProfileSecurity = () => {
 
           {/* New Password */}
           <div>
-            <label 
+            <label
               className="block text-sm font-medium mb-2"
               style={{ color: 'var(--text-secondary)' }}
             >
@@ -258,7 +258,7 @@ const ProfileSecurity = () => {
                 value={passwordData.newPassword}
                 onChange={handlePasswordChange}
                 className="w-full px-4 py-2 pr-12 rounded-lg border transition-colors"
-                style={{ 
+                style={{
                   backgroundColor: 'var(--bg-primary)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-primary)'
@@ -288,13 +288,13 @@ const ProfileSecurity = () => {
 
                 {/* Strength Label */}
                 <div className="flex items-center justify-between">
-                  <span 
+                  <span
                     className="text-sm font-medium"
                     style={{ color: 'var(--text-secondary)' }}
                   >
                     Password Strength:
                   </span>
-                  <span 
+                  <span
                     className={`text-sm font-semibold ${getPasswordStrengthColor(passwordStrength.strength)}`}
                   >
                     {passwordStrength.strength?.charAt(0).toUpperCase() + passwordStrength.strength?.slice(1).replace('-', ' ')}
@@ -305,13 +305,13 @@ const ProfileSecurity = () => {
                 {passwordStrength.feedback.length > 0 && (
                   <ul className="text-sm space-y-1">
                     {passwordStrength.feedback.map((feedback, index) => (
-                      <li 
+                      <li
                         key={index}
                         className="flex items-start gap-2"
-                        style={{ 
-                          color: passwordStrength.isValid && passwordStrength.feedback[0] === 'Password meets requirements' 
-                            ? 'var(--success-color)' 
-                            : 'var(--text-tertiary)' 
+                        style={{
+                          color: passwordStrength.isValid && passwordStrength.feedback[0] === 'Password meets requirements'
+                            ? 'var(--success-color)'
+                            : 'var(--text-tertiary)'
                         }}
                       >
                         {passwordStrength.isValid && passwordStrength.feedback[0] === 'Password meets requirements' ? (
@@ -330,7 +330,7 @@ const ProfileSecurity = () => {
 
           {/* Confirm Password */}
           <div>
-            <label 
+            <label
               className="block text-sm font-medium mb-2"
               style={{ color: 'var(--text-secondary)' }}
             >
@@ -343,7 +343,7 @@ const ProfileSecurity = () => {
                 value={passwordData.confirmPassword}
                 onChange={handlePasswordChange}
                 className="w-full px-4 py-2 pr-12 rounded-lg border transition-colors"
-                style={{ 
+                style={{
                   backgroundColor: 'var(--bg-primary)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-primary)'
@@ -362,23 +362,23 @@ const ProfileSecurity = () => {
           </div>
 
           {/* Security Tips */}
-          <div 
+          <div
             className="p-4 rounded-lg space-y-2"
             style={{ backgroundColor: 'var(--bg-tertiary)' }}
           >
             <div className="flex items-center gap-2 mb-2">
-              <FiShield 
+              <FiShield
                 className="w-4 h-4"
                 style={{ color: 'var(--primary-color)' }}
               />
-              <span 
+              <span
                 className="text-sm font-medium"
                 style={{ color: 'var(--text-primary)' }}
               >
                 Password Security Tips
               </span>
             </div>
-            <ul 
+            <ul
               className="text-sm space-y-1 pl-6"
               style={{ color: 'var(--text-tertiary)' }}
             >
@@ -396,7 +396,7 @@ const ProfileSecurity = () => {
               type="submit"
               disabled={loading || !passwordStrength?.isValid}
               className="px-6 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ 
+              style={{
                 backgroundColor: 'var(--primary-color)',
                 color: 'white'
               }}

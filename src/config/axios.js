@@ -14,9 +14,8 @@ const apiClient = axios.create({
   timeout: REQUEST_TIMEOUT,
   headers: {
     'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest', // CSRF protection header
   },
-  withCredentials: false, // Set to true if using HTTP-only cookies
+  withCredentials: false,
 })
 
 // Update activity timestamp
@@ -96,7 +95,7 @@ apiClient.interceptors.response.use(
 
       try {
         const refreshToken = localStorage.getItem('refreshToken')
-        
+
         if (!refreshToken) {
           throw new Error('No refresh token available')
         }
@@ -184,11 +183,11 @@ export const securityUtils = {
    */
   getSafeErrorMessage: (error) => {
     if (!error) return 'An unknown error occurred'
-    
+
     if (error.response?.data?.message) {
       return error.response.data.message
     }
-    
+
     if (error.message) {
       // Don't expose internal error details in production
       if (import.meta.env.PROD) {
@@ -196,7 +195,7 @@ export const securityUtils = {
       }
       return error.message
     }
-    
+
     return 'An unknown error occurred'
   }
 }

@@ -44,13 +44,13 @@ const Header = ({ toggleSidebar, sidebarCollapsed }) => {
             {breadcrumbs.map((crumb, index) => (
               <div key={crumb.path} className="flex items-center space-x-2">
                 {index > 0 && (
-                  <FiChevronRight 
-                    size={16} 
-                    className="text-gray-400" 
+                  <FiChevronRight
+                    size={16}
+                    className="text-gray-400"
                   />
                 )}
                 {index === breadcrumbs.length - 1 ? (
-                  <span 
+                  <span
                     className="text-sm font-medium"
                     style={{ color: 'var(--text-primary)' }}
                   >
@@ -88,7 +88,7 @@ const Header = ({ toggleSidebar, sidebarCollapsed }) => {
             <FiSearch size={16} />
             <span className="text-sm">Search...</span>
             <kbd className="hidden lg:inline-flex items-center px-1.5 py-0.5 text-xs font-semibold border rounded"
-              style={{ 
+              style={{
                 borderColor: 'var(--border-color)',
                 backgroundColor: 'var(--bg-secondary)'
               }}
