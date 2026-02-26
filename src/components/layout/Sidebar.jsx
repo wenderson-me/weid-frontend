@@ -142,7 +142,7 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
               <button
                 onClick={handleThemeToggle}
                 className="p-2 rounded-xl transition-all"
-                style={{ 
+                style={{
                   color: 'var(--text-secondary)',
                   backgroundColor: 'var(--bg-secondary)'
                 }}
@@ -153,7 +153,7 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
               <button
                 onClick={handleLogout}
                 className="p-2 rounded-xl transition-all"
-                style={{ 
+                style={{
                   color: 'var(--text-secondary)',
                   backgroundColor: 'var(--bg-secondary)'
                 }}
@@ -188,7 +188,7 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
                 <button
                   onClick={handleThemeToggle}
                   className="flex-1 flex items-center justify-center p-2 rounded-xl transition-all"
-                  style={{ 
+                  style={{
                     backgroundColor: 'var(--bg-secondary)',
                     color: 'var(--text-secondary)'
                   }}
@@ -199,7 +199,7 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
                 <button
                   onClick={handleLogout}
                   className="flex-1 flex items-center justify-center p-2 rounded-xl transition-all"
-                  style={{ 
+                  style={{
                     backgroundColor: 'var(--bg-secondary)',
                     color: 'var(--text-secondary)'
                   }}

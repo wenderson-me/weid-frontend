@@ -9,10 +9,13 @@ const Dashboard = () => {
     <div className="container mx-auto px-4 py-6">
       {/* Welcome message */}
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">
+        <h1
+          className="text-2xl font-semibold"
+          style={{ color: 'var(--text-primary)' }}
+        >
           Welcome back, {currentUser?.name?.split(' ')[0]}!
         </h1>
-        <p className="text-gray-600">
+        <p style={{ color: 'var(--text-secondary)' }}>
           Here's what's happening with your tasks today.
         </p>
       </div>
@@ -21,9 +24,20 @@ const Dashboard = () => {
       <MorningBriefing />
 
       {/* Placeholder for future components */}
-      <div className="mt-8 p-6 bg-white rounded-xl shadow-sm border border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Dashboard</h2>
-        <p className="text-gray-600">
+      <div
+        className="mt-8 p-6 rounded-xl shadow-sm border"
+        style={{
+          backgroundColor: 'var(--bg-secondary)',
+          borderColor: 'var(--border-color)'
+        }}
+      >
+        <h2
+          className="text-lg font-semibold mb-4"
+          style={{ color: 'var(--text-primary)' }}
+        >
+          Dashboard
+        </h2>
+        <p style={{ color: 'var(--text-secondary)' }}>
           Your dashboard is ready for new features and integrations.
         </p>
       </div>

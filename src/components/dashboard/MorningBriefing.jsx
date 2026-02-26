@@ -30,23 +30,49 @@ const MorningBriefing = () => {
   const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
 
   return (
-    <div className="bg-gradient-to-br from-violet-50 to-purple-50 rounded-xl p-6 mb-6 border border-violet-100">
+    <div
+      className="rounded-xl p-6 mb-6 border"
+      style={{
+        backgroundColor: 'var(--bg-secondary)',
+        borderColor: 'var(--border-color)'
+      }}
+    >
       <div className="mb-4">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <h2
+          className="text-2xl font-bold mb-2"
+          style={{ color: 'var(--text-primary)' }}
+        >
           {getGreeting()}
         </h2>
-        <div className="flex items-center text-gray-600">
+        <div className="flex items-center" style={{ color: 'var(--text-secondary)' }}>
           <FiCalendar className="mr-2" />
           <span>{formatDate(currentDate)}</span>
         </div>
       </div>
 
-      <div className="bg-white/60 backdrop-blur rounded-lg p-4 border border-violet-100">
+      <div
+        className="backdrop-blur rounded-lg p-4 border"
+        style={{
+          backgroundColor: 'var(--bg-primary)',
+          borderColor: 'var(--border-color)'
+        }}
+      >
         <div className="mb-3">
-          <h3 className="font-semibold text-gray-800 mb-2">Today's Tasks</h3>
-          <p className="text-sm text-gray-600">No tasks scheduled for today</p>
+          <h3
+            className="font-semibold mb-2"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            Today's Tasks
+          </h3>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>No tasks scheduled for today</p>
         </div>
-        <p className="text-sm italic text-purple-700 border-l-2 border-purple-400 pl-3">
+        <p
+          className="text-sm italic border-l-2 pl-3"
+          style={{
+            color: 'var(--primary-color)',
+            borderColor: 'var(--primary-color)'
+          }}
+        >
           {randomQuote}
         </p>
       </div>
