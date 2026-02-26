@@ -16,6 +16,9 @@
   --border-color: #e5e7eb;
   --hover-bg: #f3f4f6;
 
+  /* Primary color (main accent) */
+  --primary-color: #6366f1;
+
   /* Brand colors remain the same regardless of theme */
   --brand-primary: #6366f1;
   --brand-primary-hover: #4f46e5;
@@ -55,6 +58,9 @@
   --border-color: #e5e7eb;
   --hover-bg: #f3f4f6;
 
+  /* Primary color (main accent) */
+  --primary-color: #6366f1;
+
   /* Accent colors */
   --accent-primary: #6366f1;
   --accent-danger: #ef4444;
@@ -85,6 +91,9 @@
 
   --border-color: #374151;
   --hover-bg: #2d3748;
+
+  /* Primary color (main accent) */
+  --primary-color: #6366f1;
 
   /* Accent colors */
   --accent-primary: #6366f1;
