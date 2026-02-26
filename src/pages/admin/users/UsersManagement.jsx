@@ -6,7 +6,7 @@ import userService from '../../../services/userService'
 import { useAuth } from '../../../hooks/useAuth'
 
 const UsersManagement = () => {
-  const { user: currentUser } = useAuth()
+  const { currentUser } = useAuth()
   
   // Estado de usuários e filtros
   const [users, setUsers] = useState([])
