@@ -2,7 +2,10 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   FiLogOut, FiX, FiChevronRight,
-  FiMoon, FiSun, FiMonitor
+  FiMoon, FiSun, FiMonitor,
+  FiHome, FiGrid, FiTrendingUp, FiCalendar, 
+  FiClock, FiShoppingCart, FiMessageSquare, FiBell,
+  FiSettings, FiKey, FiHelpCircle, FiUser
 } from 'react-icons/fi';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
@@ -45,12 +48,13 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
         />
       )}
 
+      {/* Main Sidebar - Left Panel */}
       <aside
-        className={`fixed inset-y-0 left-0 z-30 bg-white/95 backdrop-blur-xl border-r border-gray-200/80 shadow-xl transition-all duration-300 ease-in-out transform ${
+        className={`fixed inset-y-0 left-0 z-30 backdrop-blur-xl border-r transition-all duration-300 ease-in-out transform flex flex-col ${
           open ? 'translate-x-0' : '-translate-x-full'
-        } ${collapsed ? 'w-20' : 'w-64'} lg:translate-x-0 lg:static lg:z-0 lg:bg-white/98 lg:shadow-sm`}
+        } w-64 lg:translate-x-0 lg:static lg:z-0`}
         style={{
-          backgroundColor: 'var(--sidebar-bg)',
+          backgroundColor: 'var(--bg-secondary)',
           borderColor: 'var(--border-color)',
           boxShadow: 'var(--shadow-lg)'
         }}
@@ -64,40 +68,36 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
           <FiX size={20} />
         </button>
 
-        {/* Logo/Brand */}
-        <div className={`p-6 border-b ${collapsed ? 'px-4' : ''}`} style={{ borderColor: 'var(--border-color)' }}>
-          <div className={`flex items-center ${collapsed ? 'justify-center' : 'space-x-3'}`}>
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-md">
-              W
-            </div>
-            {!collapsed && (
-              <div>
-                <h1 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>Weid</h1>
-                <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Management System</p>
+        {/* Header with dropdown */}
+        <div className="p-6 border-b" style={{ borderColor: 'var(--border-color)' }}>
+          <button className="flex items-center justify-between w-full p-3 rounded-lg hover:opacity-80 transition-opacity" style={{ backgroundColor: 'var(--bg-primary)' }}>
+            <div className="flex items-center space-x-2">
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm">
+                W
               </div>
-            )}
-          </div>
+              <span className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>
+                Weid
+              </span>
+            </div>
+            <FiChevronRight size={18} style={{ color: 'var(--text-secondary)' }} />
+          </button>
         </div>
 
         {/* Navigation */}
-        <div className={`py-6 h-[calc(100%-220px)] overflow-y-auto ${collapsed ? 'px-2' : 'px-4'}`}>
+        <nav className="flex-1 overflow-y-auto py-6 px-4">
           {navigationConfig
             .filter(section => !section.roles || hasRole(section.roles))
             .map((section, idx) => {
-              // Filter items based on user role
               const allowedItems = section.items.filter(item => !item.roles || hasRole(item.roles))
 
-              // Skip section if no items are available
               if (allowedItems.length === 0) return null
 
               return (
-                <div key={idx} className="mb-8">
-                  {!collapsed && (
-                    <h2 className="text-xs font-bold uppercase tracking-wider mb-4 px-3" style={{ color: 'var(--text-tertiary)' }}>
-                      {section.title}
-                    </h2>
-                  )}
-                  <nav className="space-y-1">
+                <div key={idx} className="mb-6">
+                  <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3" style={{ color: 'var(--text-tertiary)' }}>
+                    {section.title}
+                  </h2>
+                  <div className="space-y-1">
                     {allowedItems.map((item, itemIdx) => {
                       const Icon = item.icon;
                       const isActive = location.pathname === item.path ||
@@ -107,109 +107,158 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
                         <Link
                           key={itemIdx}
                           to={item.path}
-                          className={`group flex items-center ${collapsed ? 'justify-center px-3' : 'justify-between px-3'} py-3 rounded-xl font-medium transition-all duration-200`}
+                          className="flex items-center space-x-3 px-3 py-2 rounded-lg font-medium transition-all duration-200 group"
                           style={isActive ? {
                             backgroundColor: 'var(--primary-color)',
                             color: 'white'
                           } : {
                             color: 'var(--text-secondary)'
                           }}
-                          title={collapsed ? item.name : ''}
+                          title={item.name}
                         >
-                          <div className={`flex items-center ${collapsed ? '' : 'space-x-3'}`}>
-                            <Icon className={`h-5 w-5 ${isActive ? 'text-white' : ''}`} />
-                            {!collapsed && <span>{item.name}</span>}
-                          </div>
-                          {!collapsed && isActive && (
-                            <FiChevronRight className="h-4 w-4" />
+                          <Icon className="h-5 w-5 flex-shrink-0" />
+                          <span className="flex-1">{item.name}</span>
+                          {isActive && (
+                            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'white' }} />
                           )}
                         </Link>
                       );
                     })}
-                  </nav>
+                  </div>
                 </div>
               );
             })}
-        </div>
+        </nav>
 
-        {/* User section */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t" style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
-          {collapsed ? (
-            <div className="flex flex-col items-center space-y-3">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white">
+        {/* User Section Footer */}
+        <div className="p-4 border-t" style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
+          <div className="p-3 rounded-lg mb-3" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+            <div className="flex items-center space-x-3">
+              <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white text-sm flex-shrink-0">
                 {currentUser?.name?.charAt(0).toUpperCase() || 'A'}
               </div>
-              <button
-                onClick={handleThemeToggle}
-                className="p-2 rounded-xl transition-all"
-                style={{
-                  color: 'var(--text-secondary)',
-                  backgroundColor: 'var(--bg-secondary)'
-                }}
-                title={`Theme: ${theme}`}
-              >
-                {getThemeIcon()}
-              </button>
-              <button
-                onClick={handleLogout}
-                className="p-2 rounded-xl transition-all"
-                style={{
-                  color: 'var(--text-secondary)',
-                  backgroundColor: 'var(--bg-secondary)'
-                }}
-                title="Logout"
-              >
-                <FiLogOut className="h-5 w-5" />
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-xl border" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)' }}>
-                <div className="flex items-center space-x-3 min-w-0 flex-1">
-                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white flex-shrink-0">
-                    {currentUser?.name?.charAt(0).toUpperCase() || 'A'}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
-                      {currentUser?.name?.split(' ')[0] || 'Administrator'}
-                    </p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <p className="text-xs truncate" style={{ color: 'var(--text-tertiary)' }}>
-                        {currentUser?.email || 'admin@example.com'}
-                      </p>
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${getRoleBadgeColor()}`}>
-                        {getRoleDisplayName()}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleThemeToggle}
-                  className="flex-1 flex items-center justify-center p-2 rounded-xl transition-all"
-                  style={{
-                    backgroundColor: 'var(--bg-secondary)',
-                    color: 'var(--text-secondary)'
-                  }}
-                  title={`Theme: ${theme}`}
-                >
-                  {getThemeIcon()}
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="flex-1 flex items-center justify-center p-2 rounded-xl transition-all"
-                  style={{
-                    backgroundColor: 'var(--bg-secondary)',
-                    color: 'var(--text-secondary)'
-                  }}
-                  title="Logout"
-                >
-                  <FiLogOut className="h-5 w-5" />
-                </button>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
+                  {currentUser?.name?.split(' ')[0] || 'User'}
+                </p>
+                <p className="text-[11px] truncate" style={{ color: 'var(--text-tertiary)' }}>
+                  {getRoleDisplayName()}
+                </p>
               </div>
             </div>
-          )}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleThemeToggle}
+              className="flex-1 flex items-center justify-center p-2 rounded-lg transition-all"
+              style={{
+                backgroundColor: 'var(--bg-tertiary)',
+                color: 'var(--text-secondary)'
+              }}
+              title={`Theme: ${theme}`}
+            >
+              {getThemeIcon()}
+            </button>
+            <button
+              onClick={handleLogout}
+              className="flex-1 flex items-center justify-center p-2 rounded-lg transition-all hover:text-red-500"
+              style={{
+                backgroundColor: 'var(--bg-tertiary)',
+                color: 'var(--text-secondary)'
+              }}
+              title="Logout"
+            >
+              <FiLogOut className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      {/* Secondary Sidebar - Right Icon Panel */}
+      <aside
+        className="hidden lg:flex lg:fixed lg:inset-y-0 lg:right-0 lg:w-20 lg:z-20 lg:flex-col lg:items-center bg-opacity-50 border-l"
+        style={{
+          backgroundColor: 'var(--bg-secondary)',
+          borderColor: 'var(--border-color)'
+        }}
+      >
+        {/* Quick Navigation Icons */}
+        <nav className="flex-1 flex flex-col items-center justify-center space-y-4 py-6 px-3">
+          {[
+            { icon: FiHome, label: 'Dashboard', path: '/dashboard', badge: false },
+            { icon: FiGrid, label: 'Products', path: '/products', badge: false },
+            { icon: FiTrendingUp, label: 'Analytics', path: '/analytics', badge: true },
+            { icon: FiCalendar, label: 'Schedule', path: '/schedule', badge: false },
+            { icon: FiMessageSquare, label: 'Messages', path: '/messages', badge: true },
+            { icon: FiBell, label: 'Notifications', path: '/notifications', badge: true },
+          ].map((item, idx) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.path ||
+                            (item.path !== '/' && location.pathname.startsWith(item.path + '/'));
+            
+            return (
+              <Link
+                key={idx}
+                to={item.path}
+                className="relative p-3 rounded-lg transition-all hover:scale-110 group"
+                style={{
+                  color: isActive ? 'white' : 'var(--text-secondary)',
+                  backgroundColor: isActive ? 'var(--primary-color)' : 'transparent'
+                }}
+                title={item.label}
+              >
+                <Icon className="h-6 w-6" />
+                {item.badge && (
+                  <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" />
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Bottom Icons */}
+        <div className="flex flex-col items-center space-y-3 p-3 border-t" style={{ borderColor: 'var(--border-color)' }}>
+          <button
+            onClick={handleThemeToggle}
+            className="p-3 rounded-lg transition-all hover:scale-110"
+            style={{
+              color: 'var(--text-secondary)',
+              backgroundColor: 'var(--bg-primary)'
+            }}
+            title={`Theme: ${theme}`}
+          >
+            {getThemeIcon()}
+          </button>
+          <button
+            className="p-3 rounded-lg transition-all hover:scale-110"
+            style={{
+              color: 'var(--text-secondary)',
+              backgroundColor: 'var(--bg-primary)'
+            }}
+            title="Settings"
+          >
+            <FiSettings className="h-5 w-5" />
+          </button>
+          <button
+            onClick={handleLogout}
+            className="p-3 rounded-lg transition-all hover:scale-110 hover:text-red-500"
+            style={{
+              color: 'var(--text-secondary)',
+              backgroundColor: 'var(--bg-primary)'
+            }}
+            title="Logout"
+          >
+            <FiLogOut className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* User Avatar */}
+        <div className="p-3 border-t" style={{ borderColor: 'var(--border-color)' }}>
+          <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white text-xs cursor-pointer hover:scale-110 transition-transform"
+            title={currentUser?.name}
+          >
+            {currentUser?.name?.charAt(0).toUpperCase() || 'A'}
+          </div>
         </div>
       </aside>
     </>
