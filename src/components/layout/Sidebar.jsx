@@ -57,34 +57,26 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
       >
         {/* Close button for mobile */}
         <button
-          className="absolute top-5 right-5 p-2 text-gray-400 hover:bg-gray-100 rounded-xl transition-all duration-200 lg:hidden"
+          className="absolute top-5 right-5 p-2 rounded-xl transition-all lg:hidden"
           onClick={toggleSidebar}
+          style={{ color: 'var(--text-secondary)' }}
         >
           <FiX size={20} />
         </button>
 
         {/* Logo/Brand */}
-        <div className={`p-6 border-b border-gray-200/80 ${collapsed ? 'px-4' : ''}`}>
+        <div className={`p-6 border-b ${collapsed ? 'px-4' : ''}`} style={{ borderColor: 'var(--border-color)' }}>
           <div className={`flex items-center ${collapsed ? 'justify-center' : 'space-x-3'}`}>
             <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-md">
               W
             </div>
             {!collapsed && (
               <div>
-                <h1 className="text-lg font-bold text-gray-900">Weid</h1>
-                <p className="text-xs text-gray-500">Management System</p>
+                <h1 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>Weid</h1>
+                <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Management System</p>
               </div>
             )}
           </div>
-          {!collapsed && (
-            <button
-              onClick={handleThemeToggle}
-              className="mt-4 w-full flex items-center justify-center p-2.5 rounded-xl transition-all duration-200 hover:scale-105 bg-gray-100"
-              title="Toggle theme"
-            >
-              {getThemeIcon()}
-            </button>
-          )}
         </div>
 
         {/* Navigation */}
@@ -101,7 +93,7 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
               return (
                 <div key={idx} className="mb-8">
                   {!collapsed && (
-                    <h2 className="text-xs font-bold uppercase tracking-wider mb-4 px-3 text-gray-500">
+                    <h2 className="text-xs font-bold uppercase tracking-wider mb-4 px-3" style={{ color: 'var(--text-tertiary)' }}>
                       {section.title}
                     </h2>
                   )}
@@ -115,19 +107,21 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
                         <Link
                           key={itemIdx}
                           to={item.path}
-                          className={`group flex items-center ${collapsed ? 'justify-center px-3' : 'justify-between px-3'} py-3 rounded-xl font-medium transition-all duration-200 ${
-                            isActive
-                              ? 'bg-violet-50 text-violet-700 shadow-sm border border-violet-100'
-                              : 'text-gray-600 hover:bg-gray-50'
-                          }`}
+                          className={`group flex items-center ${collapsed ? 'justify-center px-3' : 'justify-between px-3'} py-3 rounded-xl font-medium transition-all duration-200`}
+                          style={isActive ? {
+                            backgroundColor: 'var(--primary-color)',
+                            color: 'white'
+                          } : {
+                            color: 'var(--text-secondary)'
+                          }}
                           title={collapsed ? item.name : ''}
                         >
                           <div className={`flex items-center ${collapsed ? '' : 'space-x-3'}`}>
-                            <Icon className={`h-5 w-5 ${isActive ? 'text-violet-600' : 'text-gray-400 group-hover:text-gray-600'}`} />
+                            <Icon className={`h-5 w-5 ${isActive ? 'text-white' : ''}`} />
                             {!collapsed && <span>{item.name}</span>}
                           </div>
                           {!collapsed && isActive && (
-                            <FiChevronRight className="h-4 w-4 text-violet-500" />
+                            <FiChevronRight className="h-4 w-4" />
                           )}
                         </Link>
                       );
@@ -139,47 +133,81 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
         </div>
 
         {/* User section */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-gray-50/50">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t" style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
           {collapsed ? (
             <div className="flex flex-col items-center space-y-3">
               <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white">
                 {currentUser?.name?.charAt(0).toUpperCase() || 'A'}
               </div>
               <button
+                onClick={handleThemeToggle}
+                className="p-2 rounded-xl transition-all"
+                style={{ 
+                  color: 'var(--text-secondary)',
+                  backgroundColor: 'var(--bg-secondary)'
+                }}
+                title={`Theme: ${theme}`}
+              >
+                {getThemeIcon()}
+              </button>
+              <button
                 onClick={handleLogout}
-                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                className="p-2 rounded-xl transition-all"
+                style={{ 
+                  color: 'var(--text-secondary)',
+                  backgroundColor: 'var(--bg-secondary)'
+                }}
                 title="Logout"
               >
                 <FiLogOut className="h-5 w-5" />
               </button>
             </div>
           ) : (
-            <div className="flex items-center justify-between p-3 rounded-xl border border-gray-200 bg-white shadow-sm">
-              <div className="flex items-center space-x-3 min-w-0 flex-1">
-                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white flex-shrink-0">
-                  {currentUser?.name?.charAt(0).toUpperCase() || 'A'}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold text-gray-900 truncate">
-                    {currentUser?.name?.split(' ')[0] || 'Administrator'}
-                  </p>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <p className="text-xs text-gray-500 truncate">
-                      {currentUser?.email || 'admin@example.com'}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 rounded-xl border" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)' }}>
+                <div className="flex items-center space-x-3 min-w-0 flex-1">
+                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white flex-shrink-0">
+                    {currentUser?.name?.charAt(0).toUpperCase() || 'A'}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
+                      {currentUser?.name?.split(' ')[0] || 'Administrator'}
                     </p>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${getRoleBadgeColor()}`}>
-                      {getRoleDisplayName()}
-                    </span>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <p className="text-xs truncate" style={{ color: 'var(--text-tertiary)' }}>
+                        {currentUser?.email || 'admin@example.com'}
+                      </p>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${getRoleBadgeColor()}`}>
+                        {getRoleDisplayName()}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <button
-                onClick={handleLogout}
-                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all flex-shrink-0"
-                title="Logout"
-              >
-                <FiLogOut className="h-5 w-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleThemeToggle}
+                  className="flex-1 flex items-center justify-center p-2 rounded-xl transition-all"
+                  style={{ 
+                    backgroundColor: 'var(--bg-secondary)',
+                    color: 'var(--text-secondary)'
+                  }}
+                  title={`Theme: ${theme}`}
+                >
+                  {getThemeIcon()}
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="flex-1 flex items-center justify-center p-2 rounded-xl transition-all"
+                  style={{ 
+                    backgroundColor: 'var(--bg-secondary)',
+                    color: 'var(--text-secondary)'
+                  }}
+                  title="Logout"
+                >
+                  <FiLogOut className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           )}
         </div>
