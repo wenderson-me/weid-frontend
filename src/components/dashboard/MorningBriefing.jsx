@@ -3,7 +3,7 @@ import { FiCalendar } from 'react-icons/fi';
 
 const MorningBriefing = () => {
   const currentDate = new Date();
-  
+
   const getGreeting = () => {
     const hour = currentDate.getHours();
     if (hour < 12) return 'Good morning';
