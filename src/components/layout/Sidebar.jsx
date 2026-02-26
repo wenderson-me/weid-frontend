@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   FiLogOut, FiX, FiChevronRight,
   FiMoon, FiSun, FiMonitor,
-  FiHome, FiGrid, FiTrendingUp, FiCalendar, 
-  FiClock, FiShoppingCart, FiMessageSquare, FiBell,
-  FiSettings, FiKey, FiHelpCircle, FiUser
+  FiUser
 } from 'react-icons/fi';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
@@ -17,7 +15,6 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { hasRole, getRoleDisplayName, getRoleBadgeColor } = useRole();
-  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleThemeToggle = () => {
     const newTheme = theme === 'dark' ? 'light' : theme === 'light' ? 'system' : 'dark';
@@ -131,174 +128,53 @@ const Sidebar = ({ open, toggleSidebar, collapsed }) => {
             })}
         </nav>
 
-        {/* User Section Footer - Simplified */}
-        <div className="p-4 border-t" style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
-          <div className="flex items-center gap-2 justify-center">
+        {/* User Section Footer */}
+        <div className="p-4 border-t space-y-3" style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
+          {/* User Info */}
+          <div className="flex items-center space-x-3 px-3 py-2 rounded-lg" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+            <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white flex-shrink-0">
+              {currentUser?.name?.charAt(0).toUpperCase() || 'A'}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
+                {currentUser?.name || 'User'}
+              </p>
+              <div className="flex items-center space-x-2 mt-0.5">
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getRoleBadgeColor()}`}>
+                  {getRoleDisplayName()}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="space-y-2">
+            <Link
+              to="/profile"
+              className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors text-sm"
+              style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
+            >
+              <FiUser className="h-5 w-5" />
+              <span>Profile</span>
+            </Link>
             <button
               onClick={handleThemeToggle}
-              className="flex-1 flex items-center justify-center p-2 rounded-lg transition-all"
-              style={{
-                backgroundColor: 'var(--bg-tertiary)',
-                color: 'var(--text-secondary)'
-              }}
+              className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors text-sm"
+              style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
               title={`Theme: ${theme}`}
             >
               {getThemeIcon()}
+              <span>Theme: {theme}</span>
             </button>
             <button
               onClick={handleLogout}
-              className="flex-1 flex items-center justify-center p-2 rounded-lg transition-all hover:text-red-500"
-              style={{
-                backgroundColor: 'var(--bg-tertiary)',
-                color: 'var(--text-secondary)'
-              }}
+              className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors text-sm hover:text-red-500"
+              style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
               title="Logout"
             >
               <FiLogOut className="h-5 w-5" />
+              <span>Logout</span>
             </button>
-          </div>
-        </div>
-      </aside>
-
-      {/* Secondary Sidebar - Right Icon Panel */}
-      <aside
-        className="hidden lg:flex lg:fixed lg:inset-y-0 lg:right-0 lg:w-20 lg:z-20 lg:flex-col lg:items-center bg-opacity-50 border-l"
-        style={{
-          backgroundColor: 'var(--bg-secondary)',
-          borderColor: 'var(--border-color)'
-        }}
-      >
-        {/* Quick Navigation Icons */}
-        <nav className="flex-1 flex flex-col items-center justify-center space-y-4 py-6 px-3">
-          {[
-            { icon: FiHome, label: 'Dashboard', path: '/dashboard', badge: false },
-            { icon: FiGrid, label: 'Products', path: '/products', badge: false },
-            { icon: FiTrendingUp, label: 'Analytics', path: '/analytics', badge: true },
-            { icon: FiCalendar, label: 'Schedule', path: '/schedule', badge: false },
-            { icon: FiMessageSquare, label: 'Messages', path: '/messages', badge: true },
-            { icon: FiBell, label: 'Notifications', path: '/notifications', badge: true },
-          ].map((item, idx) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path ||
-                            (item.path !== '/' && location.pathname.startsWith(item.path + '/'));
-
-            return (
-              <Link
-                key={idx}
-                to={item.path}
-                className="relative p-3 rounded-lg transition-all hover:scale-110 group"
-                style={{
-                  color: isActive ? 'white' : 'var(--text-secondary)',
-                  backgroundColor: isActive ? 'var(--primary-color)' : 'transparent'
-                }}
-                title={item.label}
-              >
-                <Icon className="h-6 w-6" />
-                {item.badge && (
-                  <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Bottom Section with User Card */}
-        <div className="flex flex-col items-center space-y-3 p-3 border-t w-full" style={{ borderColor: 'var(--border-color)' }}>
-          <button
-            className="p-3 rounded-lg transition-all hover:scale-110"
-            style={{
-              color: 'var(--text-secondary)',
-              backgroundColor: 'var(--bg-primary)'
-            }}
-            title="Settings"
-          >
-            <FiSettings className="h-5 w-5" />
-          </button>
-
-          {/* User Avatar with Dropdown */}
-          <div className="relative w-full">
-            <button
-              onClick={() => setShowUserMenu(!showUserMenu)}
-              className="w-full p-0"
-              onMouseEnter={() => setShowUserMenu(true)}
-            >
-              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white text-sm cursor-pointer hover:scale-110 transition-transform mx-auto"
-                title={currentUser?.name}
-              >
-                {currentUser?.name?.charAt(0).toUpperCase() || 'A'}
-              </div>
-            </button>
-
-            {/* User Info Card - Dropdown */}
-            {showUserMenu && (
-              <div
-                className="absolute -left-56 bottom-0 w-56 rounded-lg p-4 shadow-2xl border z-50 entrance-fade"
-                style={{
-                  backgroundColor: 'var(--bg-secondary)',
-                  borderColor: 'var(--border-color)'
-                }}
-                onMouseLeave={() => setShowUserMenu(false)}
-              >
-                <div className="space-y-4">
-                  {/* Header */}
-                  <div className="flex items-center space-x-3 pb-3 border-b" style={{ borderColor: 'var(--border-color)' }}>
-                    <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center font-bold text-white flex-shrink-0">
-                      {currentUser?.name?.charAt(0).toUpperCase() || 'A'}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
-                        {currentUser?.name || 'User'}
-                      </p>
-                      <p className="text-xs truncate" style={{ color: 'var(--text-tertiary)' }}>
-                        {currentUser?.email || 'user@example.com'}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Role Badge */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Role:</span>
-                    <span className={`text-xs px-2 py-1 rounded-full font-medium ${getRoleBadgeColor()}`}>
-                      {getRoleDisplayName()}
-                    </span>
-                  </div>
-
-                  {/* Quick Links */}
-                  <div className="space-y-2 pt-2 border-t" style={{ borderColor: 'var(--border-color)' }}>
-                    <Link
-                      to="/profile"
-                      className="flex items-center space-x-2 px-3 py-2 rounded transition-colors"
-                      style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
-                    >
-                      <FiUser className="h-4 w-4" />
-                      <span className="text-xs font-medium">Profile</span>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        handleThemeToggle();
-                        setShowUserMenu(false);
-                      }}
-                      className="w-full flex items-center space-x-2 px-3 py-2 rounded transition-colors"
-                      style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
-                    >
-                      {getThemeIcon()}
-                      <span className="text-xs font-medium">Theme: {theme}</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        handleLogout();
-                        setShowUserMenu(false);
-                      }}
-                      className="w-full flex items-center space-x-2 px-3 py-2 rounded transition-colors hover:text-red-500"
-                      style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
-                    >
-                      <FiLogOut className="h-4 w-4" />
-                      <span className="text-xs font-medium">Logout</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </aside>
