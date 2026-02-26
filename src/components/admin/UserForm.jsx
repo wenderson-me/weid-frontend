@@ -1,228 +1,342 @@
 import { useState } from 'react'
-import { FiMail, FiLock, FiUser, FiShield, FiEye, FiEyeOff } from 'react-icons/fi'
-import { checkPasswordStrength, getPasswordStrengthColor, getPasswordStrengthMessage } from '../../utils/securityUtils'
-import { UserRole } from '../../hooks/useRole'
+import { FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi'
 
-const UserForm = ({ initialUser, onSubmit, isLoading, mode = 'create' }) => {
+const UserForm = ({ initialUser = null, onSubmit, isLoading = false, mode = 'create' }) => {
+  const isEditMode = mode === 'edit' && initialUser
+  
   const [formData, setFormData] = useState({
     name: initialUser?.name || '',
     email: initialUser?.email || '',
-    password: initialUser?.password || '',
-    role: initialUser?.role || UserRole.USER
+    password: '',
+    confirmPassword: '',
+    role: initialUser?.role || 'user',
   })
 
+const [errors, setErrors] = useState({})
   const [showPassword, setShowPassword] = useState(false)
-  const [passwordStrength, setPasswordStrength] = useState(null)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [passwordStrength, setPasswordStrength] = useState({ score: 0, message: '' })
 
-  const handlePasswordChange = (e) => {
-    const password = e.target.value
-    setFormData({ ...formData, password })
-    if (password) {
-      const strength = checkPasswordStrength(password)
-      setPasswordStrength(strength)
-    } else {
-      setPasswordStrength(null)
+  // Validação de força de senha
+  const checkPasswordStrength = (password) => {
+    if (!password) return { score: 0, message: '' }
+    
+    let score = 0
+    const checks = {
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /\d/.test(password),
+      special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]/.test(password)
     }
+    
+    Object.values(checks).forEach(check => {
+      if (check) score++
+    })
+    
+    const messages = {
+      1: 'Senha muito fraca',
+      2: 'Senha fraca',
+      3: 'Senha razoável',
+      4: 'Senha boa',
+      5: 'Senha forte'
+    }
+    
+    return {
+      score,
+      message: messages[score] || '',
+      checks
+    }
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+    
+    if (name === 'password') {
+      setPasswordStrength(checkPasswordStrength(value))
+    }
+    
+    // Limpar erro do campo
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }))
+    }
+  }
+
+  const validateForm = () => {
+    const newErrors = {}
+    
+    // Validação de nome
+    if (!formData.name.trim()) {
+      newErrors.name = 'Nome é obrigatório'
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Nome deve ter pelo menos 2 caracteres'
+    }
+    
+    // Validação de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email é obrigatório'
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Email inválido'
+    }
+    
+    // Validação de senha (obrigatória em modo criar)
+    if (!isEditMode) {
+      if (!formData.password) {
+        newErrors.password = 'Senha é obrigatória'
+      } else if (formData.password.length < 8) {
+        newErrors.password = 'Senha deve ter pelo menos 8 caracteres'
+      } else if (passwordStrength.score < 3) {
+        newErrors.password = 'Senha deve conter letras maiúsculas, minúsculas, números e caracteres especiais'
+      }
+      
+      if (!formData.confirmPassword) {
+        newErrors.confirmPassword = 'Confirmação de senha é obrigatória'
+      } else if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = 'As senhas não coincidem'
+      }
+    } else {
+      // Em modo edição, senha é opcional mas se preenchida, deve ser validada
+      if (formData.password || formData.confirmPassword) {
+        if (formData.password.length < 8) {
+          newErrors.password = 'Senha deve ter pelo menos 8 caracteres'
+        } else if (passwordStrength.score < 3) {
+          newErrors.password = 'Senha deve conter letras maiúsculas, minúsculas, números e caracteres especiais'
+        }
+        
+        if (formData.password !== formData.confirmPassword) {
+          newErrors.confirmPassword = 'As senhas não coincidem'
+        }
+      }
+    }
+    
+    return newErrors
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSubmit(formData)
+    
+    const newErrors = validateForm()
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+    
+    // Preparar dados para envio
+    const submitData = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      role: formData.role,
+    }
+    
+    // Incluir senha apenas se foi preenchida
+    if (formData.password) {
+      submitData.password = formData.password
+    }
+    
+    onSubmit(submitData)
   }
 
-  const roleOptions = [
-    { value: UserRole.ADMIN, label: 'Admin', description: 'Full system access' },
-    { value: UserRole.MANAGER, label: 'Manager', description: 'Limited admin access' },
-    { value: UserRole.USER, label: 'User', description: 'Regular user access' }
-  ]
+  const strength = checkPasswordStrength(formData.password)
+  const strengthColor = {
+    1: 'bg-red-500',
+    2: 'bg-orange-500',
+    3: 'bg-yellow-500',
+    4: 'bg-blue-500',
+    5: 'bg-green-500'
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Name Field */}
+      {/* Nome */}
       <div>
-        <label
-          htmlFor="name"
-          className="block text-sm font-medium mb-2"
-          style={{ color: 'var(--text-primary)' }}
-        >
-          <div className="flex items-center gap-2">
-            <FiUser className="w-4 h-4" />
-            Full Name
-          </div>
+        <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+          Nome <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
-          id="name"
+          name="name"
           value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          placeholder="John Doe"
+          onChange={handleChange}
+          placeholder="José Silva"
           className="w-full px-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2"
           style={{
             backgroundColor: 'var(--bg-primary)',
-            borderColor: 'var(--border-color)',
+            borderColor: errors.name ? 'rgb(239, 68, 68)' : 'var(--border-color)',
             color: 'var(--text-primary)',
-            '--tw-ring-color': 'var(--primary-color)'
           }}
           disabled={isLoading}
-          required
         />
+        {errors.name && (
+          <p className="mt-1 text-sm flex items-center gap-1" style={{ color: 'rgb(239, 68, 68)' }}>
+            <FiAlertCircle className="w-4 h-4" /> {errors.name}
+          </p>
+        )}
       </div>
 
-      {/* Email Field */}
+      {/* Email */}
       <div>
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium mb-2"
-          style={{ color: 'var(--text-primary)' }}
-        >
-          <div className="flex items-center gap-2">
-            <FiMail className="w-4 h-4" />
-            Email Address
-          </div>
+        <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+          Email <span className="text-red-500">*</span>
         </label>
         <input
           type="email"
-          id="email"
+          name="email"
           value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          placeholder="john@example.com"
+          onChange={handleChange}
+          placeholder="usuario@exemplo.com"
+          className="w-full px-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2"
+          style={{
+            backgroundColor: 'var(--bg-primary)',
+            borderColor: errors.email ? 'rgb(239, 68, 68)' : 'var(--border-color)',
+            color: 'var(--text-primary)',
+          }}
+          disabled={isLoading || isEditMode}
+        />
+        {errors.email && (
+          <p className="mt-1 text-sm flex items-center gap-1" style={{ color: 'rgb(239, 68, 68)' }}>
+            <FiAlertCircle className="w-4 h-4" /> {errors.email}
+          </p>
+        )}
+        {isEditMode && (
+          <p className="mt-1 text-xs" style={{ color: 'var(--text-tertiary)' }}>
+            Email não pode ser alterado
+          </p>
+        )}
+      </div>
+
+      {/* Papel */}
+      <div>
+        <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+          Papel <span className="text-red-500">*</span>
+        </label>
+        <select
+          name="role"
+          value={formData.role}
+          onChange={handleChange}
           className="w-full px-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2"
           style={{
             backgroundColor: 'var(--bg-primary)',
             borderColor: 'var(--border-color)',
             color: 'var(--text-primary)',
-            '--tw-ring-color': 'var(--primary-color)'
           }}
           disabled={isLoading}
-          required
-        />
+        >
+          <option value="user">Usuário</option>
+          <option value="manager">Gerenciador</option>
+          <option value="admin">Administrador</option>
+        </select>
       </div>
 
-      {/* Password Field */}
+      {/* Senha */}
       <div>
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium mb-2"
-          style={{ color: 'var(--text-primary)' }}
-        >
-          <div className="flex items-center gap-2">
-            <FiLock className="w-4 h-4" />
-            Password {mode === 'edit' && <span className="text-xs text-gray-500">(leave empty to keep current)</span>}
-          </div>
+        <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+          Senha {!isEditMode && <span className="text-red-500">*</span>} {isEditMode && <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>(opcional)</span>}
         </label>
         <div className="relative">
           <input
             type={showPassword ? 'text' : 'password'}
-            id="password"
+            name="password"
             value={formData.password}
-            onChange={handlePasswordChange}
-            placeholder={mode === 'edit' ? 'Leave empty to keep current password' : 'Enter a secure password'}
-            className="w-full px-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 pr-10"
+            onChange={handleChange}
+            placeholder="Mínimo 8 caracteres com maiúsculas, minúsculas, números e caracteres especiais"
+            className="w-full px-4 py-2 pr-12 rounded-lg border transition-colors focus:outline-none focus:ring-2"
             style={{
               backgroundColor: 'var(--bg-primary)',
-              borderColor: 'var(--border-color)',
+              borderColor: errors.password ? 'rgb(239, 68, 68)' : 'var(--border-color)',
               color: 'var(--text-primary)',
-              '--tw-ring-color': 'var(--primary-color)'
             }}
             disabled={isLoading}
-            required={mode === 'create'}
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-            disabled={isLoading}
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 transition-colors"
+            style={{ color: 'var(--text-secondary)' }}
           >
-            {showPassword ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
+            {showPassword ? <FiEyeOff className="w-5 h-5" /> : <FiEye className="w-5 h-5" />}
           </button>
         </div>
 
-        {/* Password Strength Indicator */}
-        {formData.password && passwordStrength && (
+        {/* Indicador de força de senha */}
+        {formData.password && (
           <div className="mt-2">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="flex gap-1">
+              {[1, 2, 3, 4, 5].map(i => (
                 <div
-                  className="h-full transition-all duration-300"
-                  style={{
-                    width: `${(Object.keys(passwordStrength.requirements || {}).filter(k => passwordStrength.requirements[k]).length / (Object.keys(passwordStrength.requirements || {}).length || 1)) * 100}%`,
-                    backgroundColor: getPasswordStrengthColor(passwordStrength.strength)
-                  }}
+                  key={i}
+                  className={`h-2 flex-1 rounded transition-colors ${i <= strength.score ? strengthColor[strength.score] : 'bg-gray-300'}`}
                 />
-              </div>
-              <span className="text-xs font-medium" style={{ color: getPasswordStrengthColor(passwordStrength.strength) }}>
-                {passwordStrength.strength}
-              </span>
+              ))}
             </div>
-            <p className="text-xs text-gray-500">
-              {getPasswordStrengthMessage(passwordStrength.strength)}
+            <p className="mt-1 text-xs" style={{ color: strength.score >= 4 ? 'rgb(34, 197, 94)' : strength.score >= 3 ? 'rgb(202, 138, 4)' : 'rgb(239, 68, 68)' }}>
+              {strength.message}
             </p>
           </div>
         )}
+
+        {errors.password && (
+          <p className="mt-1 text-sm flex items-center gap-1" style={{ color: 'rgb(239, 68, 68)' }}>
+            <FiAlertCircle className="w-4 h-4" /> {errors.password}
+          </p>
+        )}
       </div>
 
-      {/* Role Field */}
-      <div>
-        <label
-          htmlFor="role"
-          className="block text-sm font-medium mb-3"
-          style={{ color: 'var(--text-primary)' }}
-        >
-          <div className="flex items-center gap-2">
-            <FiShield className="w-4 h-4" />
-            User Role
-          </div>
-        </label>
-        <div className="space-y-2">
-          {roleOptions.map((option) => (
-            <label
-              key={option.value}
-              className="flex items-start p-3 rounded-lg border cursor-pointer transition-all"
+      {/* Confirmar Senha */}
+      {(formData.password || !isEditMode) && (
+        <div>
+          <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+            Confirmar Senha {!isEditMode && <span className="text-red-500">*</span>}
+          </label>
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirmar senha"
+              className="w-full px-4 py-2 pr-12 rounded-lg border transition-colors focus:outline-none focus:ring-2"
               style={{
-                backgroundColor: formData.role === option.value ? 'rgba(59, 130, 246, 0.05)' : 'var(--bg-primary)',
-                borderColor: formData.role === option.value ? 'rgb(59, 130, 246)' : 'var(--border-color)'
+                backgroundColor: 'var(--bg-primary)',
+                borderColor: errors.confirmPassword ? 'rgb(239, 68, 68)' : formData.password && formData.password === formData.confirmPassword ? 'rgb(34, 197, 94)' : 'var(--border-color)',
+                color: 'var(--text-primary)',
               }}
+              disabled={isLoading}
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 transition-colors"
+              style={{ color: 'var(--text-secondary)' }}
             >
-              <input
-                type="radio"
-                name="role"
-                value={option.value}
-                checked={formData.role === option.value}
-                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                className="mt-1 mr-3"
-                disabled={isLoading}
-              />
-              <div className="flex-1">
-                <p
-                  className="font-medium"
-                  style={{ color: 'var(--text-primary)' }}
-                >
-                  {option.label}
-                </p>
-                <p
-                  className="text-xs"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  {option.description}
-                </p>
-              </div>
-            </label>
-          ))}
+              {showConfirmPassword ? <FiEyeOff className="w-5 h-5" /> : <FiEye className="w-5 h-5" />}
+            </button>
+          </div>
+          {errors.confirmPassword && (
+            <p className="mt-1 text-sm flex items-center gap-1" style={{ color: 'rgb(239, 68, 68)' }}>
+              <FiAlertCircle className="w-4 h-4" /> {errors.confirmPassword}
+            </p>
+          )}
         </div>
-      </div>
+      )}
 
-      {/* Submit Button */}
+      {/* Botão de Submit */}
       <div className="flex gap-3 pt-6">
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 px-4 py-2 rounded-lg font-medium transition-all text-white"
-          style={{
-            backgroundColor: isLoading ? 'rgba(59, 130, 246, 0.5)' : 'var(--primary-color)',
-            cursor: isLoading ? 'not-allowed' : 'pointer'
-          }}
+          className="flex-1 px-4 py-2 rounded-lg font-medium text-white transition-opacity disabled:opacity-60"
+          style={{ backgroundColor: 'var(--primary-color)' }}
         >
-          {isLoading ? 'Saving...' : mode === 'edit' ? 'Update User' : 'Create User'}
+          {isLoading ? 'Salvando...' : isEditMode ? 'Atualizar Usuário' : 'Criar Usuário'}
         </button>
       </div>
     </form>
