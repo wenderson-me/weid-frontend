@@ -158,8 +158,19 @@ const UsersManagement = () => {
     }
   }
 
-  // Verificar se é admin
+  // Verificar permissões
   const isAdmin = () => currentUser?.role === 'admin'
+  const isManager = () => currentUser?.role === 'manager'
+  const canManageUsers = () => isAdmin() || isManager()
+  
+  // Verificar se pode gerenciar um usuário específico
+  const canManageUser = (user) => {
+    // Admins podem gerenciar qualquer usuário
+    if (isAdmin()) return true
+    // Managers só podem gerenciar usuários não-admin
+    if (isManager()) return user.role !== 'admin'
+    return false
+  }
 
   // Cores de badge
   const getRoleBadgeColor = (role) => {
@@ -254,7 +265,7 @@ const UsersManagement = () => {
           onClick={openCreateModal}
           className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-white font-medium"
           style={{ backgroundColor: 'var(--primary-color)' }}
-          disabled={loading}
+          disabled={loading || !canManageUsers()}
         >
           <FiUserPlus className="w-5 h-5" />
           Novo Usuário
@@ -472,7 +483,7 @@ const UsersManagement = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          {isAdmin() && (
+                          {canManageUser(user) && (
                             <>
                               <button
                                 onClick={() => openEditModal(user)}
