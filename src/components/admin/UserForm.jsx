@@ -3,7 +3,7 @@ import { FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi'
 
 const UserForm = ({ initialUser = null, onSubmit, isLoading = false, mode = 'create' }) => {
   const isEditMode = mode === 'edit' && initialUser
-  
+
   const [formData, setFormData] = useState({
     name: initialUser?.name || '',
     email: initialUser?.email || '',
@@ -20,7 +20,7 @@ const [errors, setErrors] = useState({})
   // Validação de força de senha
   const checkPasswordStrength = (password) => {
     if (!password) return { score: 0, message: '' }
-    
+
     let score = 0
     const checks = {
       length: password.length >= 8,
@@ -29,11 +29,11 @@ const [errors, setErrors] = useState({})
       number: /\d/.test(password),
       special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]/.test(password)
     }
-    
+
     Object.values(checks).forEach(check => {
       if (check) score++
     })
-    
+
     const messages = {
       1: 'Senha muito fraca',
       2: 'Senha fraca',
@@ -41,7 +41,7 @@ const [errors, setErrors] = useState({})
       4: 'Senha boa',
       5: 'Senha forte'
     }
-    
+
     return {
       score,
       message: messages[score] || '',
@@ -55,11 +55,11 @@ const [errors, setErrors] = useState({})
       ...prev,
       [name]: value
     }))
-    
+
     if (name === 'password') {
       setPasswordStrength(checkPasswordStrength(value))
     }
-    
+
     // Limpar erro do campo
     if (errors[name]) {
       setErrors(prev => ({
@@ -71,14 +71,14 @@ const [errors, setErrors] = useState({})
 
   const validateForm = () => {
     const newErrors = {}
-    
+
     // Validação de nome
     if (!formData.name.trim()) {
       newErrors.name = 'Nome é obrigatório'
     } else if (formData.name.trim().length < 2) {
       newErrors.name = 'Nome deve ter pelo menos 2 caracteres'
     }
-    
+
     // Validação de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!formData.email.trim()) {
@@ -86,7 +86,7 @@ const [errors, setErrors] = useState({})
     } else if (!emailRegex.test(formData.email)) {
       newErrors.email = 'Email inválido'
     }
-    
+
     // Validação de senha (obrigatória em modo criar)
     if (!isEditMode) {
       if (!formData.password) {
@@ -96,7 +96,7 @@ const [errors, setErrors] = useState({})
       } else if (passwordStrength.score < 3) {
         newErrors.password = 'Senha deve conter letras maiúsculas, minúsculas, números e caracteres especiais'
       }
-      
+
       if (!formData.confirmPassword) {
         newErrors.confirmPassword = 'Confirmação de senha é obrigatória'
       } else if (formData.password !== formData.confirmPassword) {
@@ -110,38 +110,38 @@ const [errors, setErrors] = useState({})
         } else if (passwordStrength.score < 3) {
           newErrors.password = 'Senha deve conter letras maiúsculas, minúsculas, números e caracteres especiais'
         }
-        
+
         if (formData.password !== formData.confirmPassword) {
           newErrors.confirmPassword = 'As senhas não coincidem'
         }
       }
     }
-    
+
     return newErrors
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    
+
     const newErrors = validateForm()
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
       return
     }
-    
+
     // Preparar dados para envio
     const submitData = {
       name: formData.name.trim(),
       email: formData.email.trim(),
       role: formData.role,
     }
-    
+
     // Incluir senha apenas se foi preenchida
     if (formData.password) {
       submitData.password = formData.password
     }
-    
+
     onSubmit(submitData)
   }
 

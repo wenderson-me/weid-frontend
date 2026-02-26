@@ -15,21 +15,21 @@ export const navigationConfig = [
   },
   {
     title: 'Management',
-    roles: ['admin', 'manager'], // Only for privileged users
+    roles: ['admin'], // Only for admins
     items: [
       {
         name: 'Users',
         icon: FiUsers,
         path: '/admin/users',
         description: 'Manage users and permissions',
-        roles: ['admin', 'manager']
+        roles: ['admin']
       },
       {
         name: 'Reports',
         icon: FiBarChart2,
         path: '/admin/reports',
         description: 'View system reports',
-        roles: ['admin', 'manager']
+        roles: ['admin']
       }
     ]
   },

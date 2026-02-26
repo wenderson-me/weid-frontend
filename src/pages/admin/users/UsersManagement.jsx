@@ -7,32 +7,32 @@ import { useAuth } from '../../../hooks/useAuth'
 
 const UsersManagement = () => {
   const { currentUser } = useAuth()
-  
+
   // Estado de usuários e filtros
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
-  
+
   // Modal e formulário
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState('create')
   const [selectedUser, setSelectedUser] = useState(null)
-  
+
   // Mensagens
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  
+
   // Filtros
   const [searchQuery, setSearchQuery] = useState('')
   const [roleFilter, setRoleFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
   const [showFilters, setShowFilters] = useState(false)
-  
+
   // Paginação
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
-  
+
   // Delete confirmation
   const [deleteConfirm, setDeleteConfirm] = useState({
     isOpen: false,
@@ -66,7 +66,7 @@ const UsersManagement = () => {
                          user.email.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesRole = roleFilter === 'all' || user.role === roleFilter
     const matchesStatus = statusFilter === 'all' || (statusFilter === 'active' ? user.isActive : !user.isActive)
-    
+
     return matchesSearch && matchesRole && matchesStatus
   })
 
@@ -162,7 +162,7 @@ const UsersManagement = () => {
   const isAdmin = () => currentUser?.role === 'admin'
   const isManager = () => currentUser?.role === 'manager'
   const canManageUsers = () => isAdmin() || isManager()
-  
+
   // Verificar se pode gerenciar um usuário específico
   const canManageUser = (user) => {
     // Admins podem gerenciar qualquer usuário
